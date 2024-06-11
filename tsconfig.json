@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2016",
+    "module": "system",
+    "strict": true,
+    "outDir": "build",
+    "sourceMap": true,
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "bind-imgui": [ "build/bind-imgui" ],
+    }
+  },
+  "files": [
+    "src/imgui.ts",
+  ]
+}
