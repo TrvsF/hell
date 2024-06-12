@@ -2289,9 +2289,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiWindowFlags[ImGuiWindowFlags["Popup"] = 67108864] = "Popup";
                 ImGuiWindowFlags[ImGuiWindowFlags["Modal"] = 134217728] = "Modal";
                 ImGuiWindowFlags[ImGuiWindowFlags["ChildMenu"] = 268435456] = "ChildMenu";
-            })(ImGuiWindowFlags || (ImGuiWindowFlags = {}));
-            exports_1("ImGuiWindowFlags", ImGuiWindowFlags);
-            exports_1("WindowFlags", ImGuiWindowFlags);
+            })(ImGuiWindowFlags || (exports_1("ImGuiWindowFlags", exports_1("WindowFlags", ImGuiWindowFlags = {}))));
             (function (ImGuiInputTextFlags) {
                 ImGuiInputTextFlags[ImGuiInputTextFlags["None"] = 0] = "None";
                 ImGuiInputTextFlags[ImGuiInputTextFlags["CharsDecimal"] = 1] = "CharsDecimal";
@@ -2317,9 +2315,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 // [Internal]
                 ImGuiInputTextFlags[ImGuiInputTextFlags["Multiline"] = 1048576] = "Multiline";
                 ImGuiInputTextFlags[ImGuiInputTextFlags["NoMarkEdited"] = 2097152] = "NoMarkEdited";
-            })(ImGuiInputTextFlags || (ImGuiInputTextFlags = {}));
-            exports_1("ImGuiInputTextFlags", ImGuiInputTextFlags);
-            exports_1("InputTextFlags", ImGuiInputTextFlags);
+            })(ImGuiInputTextFlags || (exports_1("ImGuiInputTextFlags", exports_1("InputTextFlags", ImGuiInputTextFlags = {}))));
             (function (ImGuiTreeNodeFlags) {
                 ImGuiTreeNodeFlags[ImGuiTreeNodeFlags["None"] = 0] = "None";
                 ImGuiTreeNodeFlags[ImGuiTreeNodeFlags["Selected"] = 1] = "Selected";
@@ -2337,9 +2333,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiTreeNodeFlags[ImGuiTreeNodeFlags["SpanFullWidth"] = 4096] = "SpanFullWidth";
                 ImGuiTreeNodeFlags[ImGuiTreeNodeFlags["NavLeftJumpsBackHere"] = 8192] = "NavLeftJumpsBackHere";
                 ImGuiTreeNodeFlags[ImGuiTreeNodeFlags["CollapsingHeader"] = 26] = "CollapsingHeader";
-            })(ImGuiTreeNodeFlags || (ImGuiTreeNodeFlags = {}));
-            exports_1("ImGuiTreeNodeFlags", ImGuiTreeNodeFlags);
-            exports_1("TreeNodeFlags", ImGuiTreeNodeFlags);
+            })(ImGuiTreeNodeFlags || (exports_1("ImGuiTreeNodeFlags", exports_1("TreeNodeFlags", ImGuiTreeNodeFlags = {}))));
             (function (ImGuiPopupFlags) {
                 ImGuiPopupFlags[ImGuiPopupFlags["None"] = 0] = "None";
                 ImGuiPopupFlags[ImGuiPopupFlags["MouseButtonLeft"] = 0] = "MouseButtonLeft";
@@ -2352,9 +2346,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiPopupFlags[ImGuiPopupFlags["AnyPopupId"] = 128] = "AnyPopupId";
                 ImGuiPopupFlags[ImGuiPopupFlags["AnyPopupLevel"] = 256] = "AnyPopupLevel";
                 ImGuiPopupFlags[ImGuiPopupFlags["AnyPopup"] = 384] = "AnyPopup";
-            })(ImGuiPopupFlags || (ImGuiPopupFlags = {}));
-            exports_1("ImGuiPopupFlags", ImGuiPopupFlags);
-            exports_1("PopupFlags", ImGuiPopupFlags);
+            })(ImGuiPopupFlags || (exports_1("ImGuiPopupFlags", exports_1("PopupFlags", ImGuiPopupFlags = {}))));
             (function (ImGuiSelectableFlags) {
                 ImGuiSelectableFlags[ImGuiSelectableFlags["None"] = 0] = "None";
                 ImGuiSelectableFlags[ImGuiSelectableFlags["DontClosePopups"] = 1] = "DontClosePopups";
@@ -2362,9 +2354,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiSelectableFlags[ImGuiSelectableFlags["AllowDoubleClick"] = 4] = "AllowDoubleClick";
                 ImGuiSelectableFlags[ImGuiSelectableFlags["Disabled"] = 8] = "Disabled";
                 ImGuiSelectableFlags[ImGuiSelectableFlags["AllowItemOverlap"] = 16] = "AllowItemOverlap"; // (WIP) Hit testing to allow subsequent widgets to overlap this one
-            })(ImGuiSelectableFlags || (ImGuiSelectableFlags = {}));
-            exports_1("ImGuiSelectableFlags", ImGuiSelectableFlags);
-            exports_1("SelectableFlags", ImGuiSelectableFlags);
+            })(ImGuiSelectableFlags || (exports_1("ImGuiSelectableFlags", exports_1("SelectableFlags", ImGuiSelectableFlags = {}))));
             (function (ImGuiComboFlags) {
                 ImGuiComboFlags[ImGuiComboFlags["None"] = 0] = "None";
                 ImGuiComboFlags[ImGuiComboFlags["PopupAlignLeft"] = 1] = "PopupAlignLeft";
@@ -2375,9 +2365,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiComboFlags[ImGuiComboFlags["NoArrowButton"] = 32] = "NoArrowButton";
                 ImGuiComboFlags[ImGuiComboFlags["NoPreview"] = 64] = "NoPreview";
                 ImGuiComboFlags[ImGuiComboFlags["HeightMask_"] = 30] = "HeightMask_";
-            })(ImGuiComboFlags || (ImGuiComboFlags = {}));
-            exports_1("ImGuiComboFlags", ImGuiComboFlags);
-            exports_1("ComboFlags", ImGuiComboFlags);
+            })(ImGuiComboFlags || (exports_1("ImGuiComboFlags", exports_1("ComboFlags", ImGuiComboFlags = {}))));
             (function (ImGuiTabBarFlags) {
                 ImGuiTabBarFlags[ImGuiTabBarFlags["None"] = 0] = "None";
                 ImGuiTabBarFlags[ImGuiTabBarFlags["Reorderable"] = 1] = "Reorderable";
@@ -2390,9 +2378,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiTabBarFlags[ImGuiTabBarFlags["FittingPolicyScroll"] = 128] = "FittingPolicyScroll";
                 ImGuiTabBarFlags[ImGuiTabBarFlags["FittingPolicyMask_"] = 192] = "FittingPolicyMask_";
                 ImGuiTabBarFlags[ImGuiTabBarFlags["FittingPolicyDefault_"] = 64] = "FittingPolicyDefault_";
-            })(ImGuiTabBarFlags || (ImGuiTabBarFlags = {}));
-            exports_1("ImGuiTabBarFlags", ImGuiTabBarFlags);
-            exports_1("TabBarFlags", ImGuiTabBarFlags);
+            })(ImGuiTabBarFlags || (exports_1("ImGuiTabBarFlags", exports_1("TabBarFlags", ImGuiTabBarFlags = {}))));
             ;
             (function (ImGuiTabItemFlags) {
                 ImGuiTabItemFlags[ImGuiTabItemFlags["None"] = 0] = "None";
@@ -2404,9 +2390,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiTabItemFlags[ImGuiTabItemFlags["NoReorder"] = 32] = "NoReorder";
                 ImGuiTabItemFlags[ImGuiTabItemFlags["Leading"] = 64] = "Leading";
                 ImGuiTabItemFlags[ImGuiTabItemFlags["Trailing"] = 128] = "Trailing"; // Enforce the tab position to the right of the tab bar (before the scrolling buttons)
-            })(ImGuiTabItemFlags || (ImGuiTabItemFlags = {}));
-            exports_1("ImGuiTabItemFlags", ImGuiTabItemFlags);
-            exports_1("TabItemFlags", ImGuiTabItemFlags);
+            })(ImGuiTabItemFlags || (exports_1("ImGuiTabItemFlags", exports_1("TabItemFlags", ImGuiTabItemFlags = {}))));
             (function (ImGuiTableFlags) {
                 // Features
                 ImGuiTableFlags[ImGuiTableFlags["None"] = 0] = "None";
@@ -2453,9 +2437,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiTableFlags[ImGuiTableFlags["SortTristate"] = 134217728] = "SortTristate";
                 // [Internal] Combinations and masks
                 ImGuiTableFlags[ImGuiTableFlags["SizingMask_"] = 57344] = "SizingMask_";
-            })(ImGuiTableFlags || (ImGuiTableFlags = {}));
-            exports_1("ImGuiTableFlags", ImGuiTableFlags);
-            exports_1("TableFlags", ImGuiTableFlags);
+            })(ImGuiTableFlags || (exports_1("ImGuiTableFlags", exports_1("TableFlags", ImGuiTableFlags = {}))));
             (function (ImGuiTableColumnFlags) {
                 // Input configuration flags
                 ImGuiTableColumnFlags[ImGuiTableColumnFlags["None"] = 0] = "None";
@@ -2487,23 +2469,17 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiTableColumnFlags[ImGuiTableColumnFlags["IndentMask_"] = 196608] = "IndentMask_";
                 ImGuiTableColumnFlags[ImGuiTableColumnFlags["StatusMask_"] = 251658240] = "StatusMask_";
                 ImGuiTableColumnFlags[ImGuiTableColumnFlags["NoDirectResize_"] = 1073741824] = "NoDirectResize_"; // [Internal] Disable user resizing this column directly (it may however we resized indirectly from its left edge)
-            })(ImGuiTableColumnFlags || (ImGuiTableColumnFlags = {}));
-            exports_1("ImGuiTableColumnFlags", ImGuiTableColumnFlags);
-            exports_1("TableColumnFlags", ImGuiTableColumnFlags);
+            })(ImGuiTableColumnFlags || (exports_1("ImGuiTableColumnFlags", exports_1("TableColumnFlags", ImGuiTableColumnFlags = {}))));
             (function (ImGuiTableRowFlags) {
                 ImGuiTableRowFlags[ImGuiTableRowFlags["None"] = 0] = "None";
                 ImGuiTableRowFlags[ImGuiTableRowFlags["Headers"] = 1] = "Headers"; // Identify header row (set default background color + width of its contents accounted different for auto column width)
-            })(ImGuiTableRowFlags || (ImGuiTableRowFlags = {}));
-            exports_1("ImGuiTableRowFlags", ImGuiTableRowFlags);
-            exports_1("TableRowFlags", ImGuiTableRowFlags);
+            })(ImGuiTableRowFlags || (exports_1("ImGuiTableRowFlags", exports_1("TableRowFlags", ImGuiTableRowFlags = {}))));
             (function (ImGuiTableBgTarget) {
                 ImGuiTableBgTarget[ImGuiTableBgTarget["None"] = 0] = "None";
                 ImGuiTableBgTarget[ImGuiTableBgTarget["RowBg0"] = 1] = "RowBg0";
                 ImGuiTableBgTarget[ImGuiTableBgTarget["RowBg1"] = 2] = "RowBg1";
                 ImGuiTableBgTarget[ImGuiTableBgTarget["CellBg"] = 3] = "CellBg"; // Set cell background color (top-most color)
-            })(ImGuiTableBgTarget || (ImGuiTableBgTarget = {}));
-            exports_1("ImGuiTableBgTarget", ImGuiTableBgTarget);
-            exports_1("TableBgTarget", ImGuiTableBgTarget);
+            })(ImGuiTableBgTarget || (exports_1("ImGuiTableBgTarget", exports_1("TableBgTarget", ImGuiTableBgTarget = {}))));
             (function (ImGuiFocusedFlags) {
                 ImGuiFocusedFlags[ImGuiFocusedFlags["None"] = 0] = "None";
                 ImGuiFocusedFlags[ImGuiFocusedFlags["ChildWindows"] = 1] = "ChildWindows";
@@ -2512,9 +2488,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiFocusedFlags[ImGuiFocusedFlags["NoPopupHierarchy"] = 8] = "NoPopupHierarchy";
                 //DockHierarchy               = 1 << 4,   // Consider docking hierarchy (treat dockspace host as parent of docked window) (when used with _ChildWindows or _RootWindow)
                 ImGuiFocusedFlags[ImGuiFocusedFlags["RootAndChildWindows"] = 3] = "RootAndChildWindows";
-            })(ImGuiFocusedFlags || (ImGuiFocusedFlags = {}));
-            exports_1("ImGuiFocusedFlags", ImGuiFocusedFlags);
-            exports_1("FocusedFlags", ImGuiFocusedFlags);
+            })(ImGuiFocusedFlags || (exports_1("ImGuiFocusedFlags", exports_1("FocusedFlags", ImGuiFocusedFlags = {}))));
             (function (ImGuiHoveredFlags) {
                 ImGuiHoveredFlags[ImGuiHoveredFlags["None"] = 0] = "None";
                 ImGuiHoveredFlags[ImGuiHoveredFlags["ChildWindows"] = 1] = "ChildWindows";
@@ -2529,9 +2503,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiHoveredFlags[ImGuiHoveredFlags["AllowWhenDisabled"] = 512] = "AllowWhenDisabled";
                 ImGuiHoveredFlags[ImGuiHoveredFlags["RectOnly"] = 416] = "RectOnly";
                 ImGuiHoveredFlags[ImGuiHoveredFlags["RootAndChildWindows"] = 3] = "RootAndChildWindows";
-            })(ImGuiHoveredFlags || (ImGuiHoveredFlags = {}));
-            exports_1("ImGuiHoveredFlags", ImGuiHoveredFlags);
-            exports_1("HoveredFlags", ImGuiHoveredFlags);
+            })(ImGuiHoveredFlags || (exports_1("ImGuiHoveredFlags", exports_1("HoveredFlags", ImGuiHoveredFlags = {}))));
             (function (ImGuiDragDropFlags) {
                 // BeginDragDropSource() flags
                 ImGuiDragDropFlags[ImGuiDragDropFlags["None"] = 0] = "None";
@@ -2546,9 +2518,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiDragDropFlags[ImGuiDragDropFlags["AcceptNoDrawDefaultRect"] = 2048] = "AcceptNoDrawDefaultRect";
                 ImGuiDragDropFlags[ImGuiDragDropFlags["AcceptNoPreviewTooltip"] = 4096] = "AcceptNoPreviewTooltip";
                 ImGuiDragDropFlags[ImGuiDragDropFlags["AcceptPeekOnly"] = 3072] = "AcceptPeekOnly";
-            })(ImGuiDragDropFlags || (ImGuiDragDropFlags = {}));
-            exports_1("ImGuiDragDropFlags", ImGuiDragDropFlags);
-            exports_1("DragDropFlags", ImGuiDragDropFlags);
+            })(ImGuiDragDropFlags || (exports_1("ImGuiDragDropFlags", exports_1("DragDropFlags", ImGuiDragDropFlags = {}))));
             // Standard Drag and Drop payload types. You can define you own payload types using 12-characters long strings. Types starting with '_' are defined by Dear ImGui.
             exports_1("IMGUI_PAYLOAD_TYPE_COLOR_3F", IMGUI_PAYLOAD_TYPE_COLOR_3F = "_COL3F"); // float[3]     // Standard type for colors, without alpha. User code may use this type.
             exports_1("IMGUI_PAYLOAD_TYPE_COLOR_4F", IMGUI_PAYLOAD_TYPE_COLOR_4F = "_COL4F"); // float[4]     // Standard type for colors. User code may use this type.
@@ -2564,9 +2534,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiDataType[ImGuiDataType["Float"] = 8] = "Float";
                 ImGuiDataType[ImGuiDataType["Double"] = 9] = "Double";
                 ImGuiDataType[ImGuiDataType["COUNT"] = 10] = "COUNT";
-            })(ImGuiDataType || (ImGuiDataType = {}));
-            exports_1("ImGuiDataType", ImGuiDataType);
-            exports_1("DataType", ImGuiDataType);
+            })(ImGuiDataType || (exports_1("ImGuiDataType", exports_1("DataType", ImGuiDataType = {}))));
             (function (ImGuiDir) {
                 ImGuiDir[ImGuiDir["None"] = -1] = "None";
                 ImGuiDir[ImGuiDir["Left"] = 0] = "Left";
@@ -2574,16 +2542,12 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiDir[ImGuiDir["Up"] = 2] = "Up";
                 ImGuiDir[ImGuiDir["Down"] = 3] = "Down";
                 ImGuiDir[ImGuiDir["COUNT"] = 4] = "COUNT";
-            })(ImGuiDir || (ImGuiDir = {}));
-            exports_1("ImGuiDir", ImGuiDir);
-            exports_1("Dir", ImGuiDir);
+            })(ImGuiDir || (exports_1("ImGuiDir", exports_1("Dir", ImGuiDir = {}))));
             (function (ImGuiSortDirection) {
                 ImGuiSortDirection[ImGuiSortDirection["None"] = 0] = "None";
                 ImGuiSortDirection[ImGuiSortDirection["Ascending"] = 1] = "Ascending";
                 ImGuiSortDirection[ImGuiSortDirection["Descending"] = 2] = "Descending"; // Descending = 9->0, Z->A etc.
-            })(ImGuiSortDirection || (ImGuiSortDirection = {}));
-            exports_1("ImGuiSortDirection", ImGuiSortDirection);
-            exports_1("SortDirection", ImGuiSortDirection);
+            })(ImGuiSortDirection || (exports_1("ImGuiSortDirection", exports_1("SortDirection", ImGuiSortDirection = {}))));
             (function (ImGuiKey) {
                 ImGuiKey[ImGuiKey["Tab"] = 0] = "Tab";
                 ImGuiKey[ImGuiKey["LeftArrow"] = 1] = "LeftArrow";
@@ -2608,18 +2572,14 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiKey[ImGuiKey["Y"] = 20] = "Y";
                 ImGuiKey[ImGuiKey["Z"] = 21] = "Z";
                 ImGuiKey[ImGuiKey["COUNT"] = 22] = "COUNT";
-            })(ImGuiKey || (ImGuiKey = {}));
-            exports_1("ImGuiKey", ImGuiKey);
-            exports_1("Key", ImGuiKey);
+            })(ImGuiKey || (exports_1("ImGuiKey", exports_1("Key", ImGuiKey = {}))));
             (function (ImGuiKeyModFlags) {
                 ImGuiKeyModFlags[ImGuiKeyModFlags["None"] = 0] = "None";
                 ImGuiKeyModFlags[ImGuiKeyModFlags["Ctrl"] = 1] = "Ctrl";
                 ImGuiKeyModFlags[ImGuiKeyModFlags["Shift"] = 2] = "Shift";
                 ImGuiKeyModFlags[ImGuiKeyModFlags["Alt"] = 4] = "Alt";
                 ImGuiKeyModFlags[ImGuiKeyModFlags["Super"] = 8] = "Super";
-            })(ImGuiKeyModFlags || (ImGuiKeyModFlags = {}));
-            exports_1("ImGuiKeyModFlags", ImGuiKeyModFlags);
-            exports_1("KeyModFlags", ImGuiKeyModFlags);
+            })(ImGuiKeyModFlags || (exports_1("ImGuiKeyModFlags", exports_1("KeyModFlags", ImGuiKeyModFlags = {}))));
             (function (ImGuiNavInput) {
                 // Gamepad Mapping
                 ImGuiNavInput[ImGuiNavInput["Activate"] = 0] = "Activate";
@@ -2646,9 +2606,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiNavInput[ImGuiNavInput["KeyDown_"] = 19] = "KeyDown_";
                 ImGuiNavInput[ImGuiNavInput["COUNT"] = 20] = "COUNT";
                 ImGuiNavInput[ImGuiNavInput["InternalStart_"] = 16] = "InternalStart_";
-            })(ImGuiNavInput || (ImGuiNavInput = {}));
-            exports_1("ImGuiNavInput", ImGuiNavInput);
-            exports_1("NavInput", ImGuiNavInput);
+            })(ImGuiNavInput || (exports_1("ImGuiNavInput", exports_1("NavInput", ImGuiNavInput = {}))));
             (function (ImGuiConfigFlags) {
                 ImGuiConfigFlags[ImGuiConfigFlags["None"] = 0] = "None";
                 ImGuiConfigFlags[ImGuiConfigFlags["NavEnableKeyboard"] = 1] = "NavEnableKeyboard";
@@ -2659,9 +2617,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiConfigFlags[ImGuiConfigFlags["NoMouseCursorChange"] = 32] = "NoMouseCursorChange";
                 ImGuiConfigFlags[ImGuiConfigFlags["IsSRGB"] = 1048576] = "IsSRGB";
                 ImGuiConfigFlags[ImGuiConfigFlags["IsTouchScreen"] = 2097152] = "IsTouchScreen"; // Application is using a touch screen instead of a mouse.
-            })(ImGuiConfigFlags || (ImGuiConfigFlags = {}));
-            exports_1("ImGuiConfigFlags", ImGuiConfigFlags);
-            exports_1("ConfigFlags", ImGuiConfigFlags);
+            })(ImGuiConfigFlags || (exports_1("ImGuiConfigFlags", exports_1("ConfigFlags", ImGuiConfigFlags = {}))));
             (function (ImGuiCol) {
                 ImGuiCol[ImGuiCol["Text"] = 0] = "Text";
                 ImGuiCol[ImGuiCol["TextDisabled"] = 1] = "TextDisabled";
@@ -2717,9 +2673,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiCol[ImGuiCol["NavWindowingDimBg"] = 51] = "NavWindowingDimBg";
                 ImGuiCol[ImGuiCol["ModalWindowDimBg"] = 52] = "ModalWindowDimBg";
                 ImGuiCol[ImGuiCol["COUNT"] = 53] = "COUNT";
-            })(ImGuiCol || (ImGuiCol = {}));
-            exports_1("ImGuiCol", ImGuiCol);
-            exports_1("Col", ImGuiCol);
+            })(ImGuiCol || (exports_1("ImGuiCol", exports_1("Col", ImGuiCol = {}))));
             (function (ImGuiStyleVar) {
                 // Enum name --------------------- // Member in ImGuiStyle structure (see ImGuiStyle for descriptions)
                 ImGuiStyleVar[ImGuiStyleVar["Alpha"] = 0] = "Alpha";
@@ -2748,18 +2702,14 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiStyleVar[ImGuiStyleVar["ButtonTextAlign"] = 23] = "ButtonTextAlign";
                 ImGuiStyleVar[ImGuiStyleVar["SelectableTextAlign"] = 24] = "SelectableTextAlign";
                 ImGuiStyleVar[ImGuiStyleVar["COUNT"] = 25] = "COUNT";
-            })(ImGuiStyleVar || (ImGuiStyleVar = {}));
-            exports_1("ImGuiStyleVar", ImGuiStyleVar);
-            exports_1("StyleVar", ImGuiStyleVar);
+            })(ImGuiStyleVar || (exports_1("ImGuiStyleVar", exports_1("StyleVar", ImGuiStyleVar = {}))));
             (function (ImGuiBackendFlags) {
                 ImGuiBackendFlags[ImGuiBackendFlags["None"] = 0] = "None";
                 ImGuiBackendFlags[ImGuiBackendFlags["HasGamepad"] = 1] = "HasGamepad";
                 ImGuiBackendFlags[ImGuiBackendFlags["HasMouseCursors"] = 2] = "HasMouseCursors";
                 ImGuiBackendFlags[ImGuiBackendFlags["HasSetMousePos"] = 4] = "HasSetMousePos";
                 ImGuiBackendFlags[ImGuiBackendFlags["RendererHasVtxOffset"] = 8] = "RendererHasVtxOffset";
-            })(ImGuiBackendFlags || (ImGuiBackendFlags = {}));
-            exports_1("ImGuiBackendFlags", ImGuiBackendFlags);
-            exports_1("BackendFlags", ImGuiBackendFlags);
+            })(ImGuiBackendFlags || (exports_1("ImGuiBackendFlags", exports_1("BackendFlags", ImGuiBackendFlags = {}))));
             (function (ImGuiButtonFlags) {
                 ImGuiButtonFlags[ImGuiButtonFlags["None"] = 0] = "None";
                 ImGuiButtonFlags[ImGuiButtonFlags["MouseButtonLeft"] = 1] = "MouseButtonLeft";
@@ -2768,9 +2718,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 // [Internal]
                 ImGuiButtonFlags[ImGuiButtonFlags["MouseButtonMask_"] = 7] = "MouseButtonMask_";
                 ImGuiButtonFlags[ImGuiButtonFlags["MouseButtonDefault_"] = 1] = "MouseButtonDefault_";
-            })(ImGuiButtonFlags || (ImGuiButtonFlags = {}));
-            exports_1("ImGuiButtonFlags", ImGuiButtonFlags);
-            exports_1("ButtonFlags", ImGuiButtonFlags);
+            })(ImGuiButtonFlags || (exports_1("ImGuiButtonFlags", exports_1("ButtonFlags", ImGuiButtonFlags = {}))));
             (function (ImGuiColorEditFlags) {
                 ImGuiColorEditFlags[ImGuiColorEditFlags["None"] = 0] = "None";
                 ImGuiColorEditFlags[ImGuiColorEditFlags["NoAlpha"] = 2] = "NoAlpha";
@@ -2805,9 +2753,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiColorEditFlags[ImGuiColorEditFlags["DataTypeMask_"] = 25165824] = "DataTypeMask_";
                 ImGuiColorEditFlags[ImGuiColorEditFlags["PickerMask_"] = 100663296] = "PickerMask_";
                 ImGuiColorEditFlags[ImGuiColorEditFlags["InputMask_"] = 402653184] = "InputMask_";
-            })(ImGuiColorEditFlags || (ImGuiColorEditFlags = {}));
-            exports_1("ImGuiColorEditFlags", ImGuiColorEditFlags);
-            exports_1("ColorEditFlags", ImGuiColorEditFlags);
+            })(ImGuiColorEditFlags || (exports_1("ImGuiColorEditFlags", exports_1("ColorEditFlags", ImGuiColorEditFlags = {}))));
             (function (ImGuiSliderFlags) {
                 ImGuiSliderFlags[ImGuiSliderFlags["None"] = 0] = "None";
                 ImGuiSliderFlags[ImGuiSliderFlags["AlwaysClamp"] = 16] = "AlwaysClamp";
@@ -2815,17 +2761,13 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiSliderFlags[ImGuiSliderFlags["NoRoundToFormat"] = 64] = "NoRoundToFormat";
                 ImGuiSliderFlags[ImGuiSliderFlags["NoInput"] = 128] = "NoInput";
                 ImGuiSliderFlags[ImGuiSliderFlags["InvalidMask_"] = 1879048207] = "InvalidMask_"; // [Internal] We treat using those bits as being potentially a 'float power' argument from the previous API that has got miscast to this enum, and will trigger an assert if needed.
-            })(ImGuiSliderFlags || (ImGuiSliderFlags = {}));
-            exports_1("ImGuiSliderFlags", ImGuiSliderFlags);
-            exports_1("SliderFlags", ImGuiSliderFlags);
+            })(ImGuiSliderFlags || (exports_1("ImGuiSliderFlags", exports_1("SliderFlags", ImGuiSliderFlags = {}))));
             (function (ImGuiMouseButton) {
                 ImGuiMouseButton[ImGuiMouseButton["Left"] = 0] = "Left";
                 ImGuiMouseButton[ImGuiMouseButton["Right"] = 1] = "Right";
                 ImGuiMouseButton[ImGuiMouseButton["Middle"] = 2] = "Middle";
                 ImGuiMouseButton[ImGuiMouseButton["COUNT"] = 5] = "COUNT";
-            })(ImGuiMouseButton || (ImGuiMouseButton = {}));
-            exports_1("ImGuiMouseButton", ImGuiMouseButton);
-            exports_1("MouseButton", ImGuiMouseButton);
+            })(ImGuiMouseButton || (exports_1("ImGuiMouseButton", exports_1("MouseButton", ImGuiMouseButton = {}))));
             (function (ImGuiMouseCursor) {
                 ImGuiMouseCursor[ImGuiMouseCursor["None"] = -1] = "None";
                 ImGuiMouseCursor[ImGuiMouseCursor["Arrow"] = 0] = "Arrow";
@@ -2838,18 +2780,14 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiMouseCursor[ImGuiMouseCursor["Hand"] = 7] = "Hand";
                 ImGuiMouseCursor[ImGuiMouseCursor["NotAllowed"] = 8] = "NotAllowed";
                 ImGuiMouseCursor[ImGuiMouseCursor["COUNT"] = 9] = "COUNT";
-            })(ImGuiMouseCursor || (ImGuiMouseCursor = {}));
-            exports_1("ImGuiMouseCursor", ImGuiMouseCursor);
-            exports_1("MouseCursor", ImGuiMouseCursor);
+            })(ImGuiMouseCursor || (exports_1("ImGuiMouseCursor", exports_1("MouseCursor", ImGuiMouseCursor = {}))));
             (function (ImGuiCond) {
                 ImGuiCond[ImGuiCond["None"] = 0] = "None";
                 ImGuiCond[ImGuiCond["Always"] = 1] = "Always";
                 ImGuiCond[ImGuiCond["Once"] = 2] = "Once";
                 ImGuiCond[ImGuiCond["FirstUseEver"] = 4] = "FirstUseEver";
                 ImGuiCond[ImGuiCond["Appearing"] = 8] = "Appearing";
-            })(ImGuiCond || (ImGuiCond = {}));
-            exports_1("ImGuiCond", ImGuiCond);
-            exports_1("Cond", ImGuiCond);
+            })(ImGuiCond || (exports_1("ImGuiCond", exports_1("Cond", ImGuiCond = {}))));
             (function (ImDrawFlags) {
                 ImDrawFlags[ImDrawFlags["None"] = 0] = "None";
                 ImDrawFlags[ImDrawFlags["Closed"] = 1] = "Closed";
@@ -2865,18 +2803,14 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImDrawFlags[ImDrawFlags["RoundCornersAll"] = 240] = "RoundCornersAll";
                 ImDrawFlags[ImDrawFlags["RoundCornersDefault_"] = 240] = "RoundCornersDefault_";
                 ImDrawFlags[ImDrawFlags["RoundCornersMask_"] = 496] = "RoundCornersMask_";
-            })(ImDrawFlags || (ImDrawFlags = {}));
-            exports_1("ImDrawFlags", ImDrawFlags);
-            exports_1("DrawFlags", ImDrawFlags);
+            })(ImDrawFlags || (exports_1("ImDrawFlags", exports_1("DrawFlags", ImDrawFlags = {}))));
             (function (ImDrawListFlags) {
                 ImDrawListFlags[ImDrawListFlags["None"] = 0] = "None";
                 ImDrawListFlags[ImDrawListFlags["AntiAliasedLines"] = 1] = "AntiAliasedLines";
                 ImDrawListFlags[ImDrawListFlags["AntiAliasedLinesUseTex"] = 2] = "AntiAliasedLinesUseTex";
                 ImDrawListFlags[ImDrawListFlags["AntiAliasedFill"] = 4] = "AntiAliasedFill";
                 ImDrawListFlags[ImDrawListFlags["AllowVtxOffset"] = 8] = "AllowVtxOffset"; // Can emit 'VtxOffset > 0' to allow large meshes. Set when 'ImGuiBackendFlags_RendererHasVtxOffset' is enabled.
-            })(ImDrawListFlags || (ImDrawListFlags = {}));
-            exports_1("ImDrawListFlags", ImDrawListFlags);
-            exports_1("wListFlags", ImDrawListFlags);
+            })(ImDrawListFlags || (exports_1("ImDrawListFlags", exports_1("wListFlags", ImDrawListFlags = {}))));
             ImVec2 = class ImVec2 {
                 constructor(x = 0.0, y = 0.0) {
                     this.x = x;
@@ -3854,9 +3788,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImFontAtlasFlags[ImFontAtlasFlags["NoPowerOfTwoHeight"] = 1] = "NoPowerOfTwoHeight";
                 ImFontAtlasFlags[ImFontAtlasFlags["NoMouseCursors"] = 2] = "NoMouseCursors";
                 ImFontAtlasFlags[ImFontAtlasFlags["NoBakedLines"] = 4] = "NoBakedLines";
-            })(ImFontAtlasFlags || (ImFontAtlasFlags = {}));
-            exports_1("ImFontAtlasFlags", ImFontAtlasFlags);
-            exports_1("FontAtlasFlags", ImFontAtlasFlags);
+            })(ImFontAtlasFlags || (exports_1("ImFontAtlasFlags", exports_1("FontAtlasFlags", ImFontAtlasFlags = {}))));
             ImFontAtlas = class ImFontAtlas {
                 constructor(native) {
                     this.native = native;
@@ -4112,9 +4044,7 @@ System.register(["bind-imgui", "./imconfig.js"], function (exports_1, context_1)
                 ImGuiViewportFlags[ImGuiViewportFlags["IsPlatformWindow"] = 1] = "IsPlatformWindow";
                 ImGuiViewportFlags[ImGuiViewportFlags["IsPlatformMonitor"] = 2] = "IsPlatformMonitor";
                 ImGuiViewportFlags[ImGuiViewportFlags["OwnedByApp"] = 4] = "OwnedByApp"; // Platform Window: is created/managed by the application (rather than a dear imgui backend)
-            })(ImGuiViewportFlags || (ImGuiViewportFlags = {}));
-            exports_1("ImGuiViewportFlags", ImGuiViewportFlags);
-            exports_1("ViewportFlags", ImGuiViewportFlags);
+            })(ImGuiViewportFlags || (exports_1("ImGuiViewportFlags", exports_1("ViewportFlags", ImGuiViewportFlags = {}))));
             ;
             ImGuiViewport = class ImGuiViewport {
                 constructor(native) {

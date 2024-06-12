@@ -128,7 +128,7 @@ function _loop(time: number): void {
 
     // default window
     {
-        ImGui.Begin("hello, hell!");
+        ImGui.Begin("welcome to hell");
 
         ImGui.Text("weclome");
         ImGui.Checkbox("demo", (value = show_demo_window) => show_demo_window = value);

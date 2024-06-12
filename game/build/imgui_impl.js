@@ -730,7 +730,7 @@ System.register(["imgui-js"], function (exports_1, context_1) {
             "}",
         ];
         const fragment_shader = [
-            "precision mediump float;",
+            "precision mediump float;", // WebGL requires precision specifiers
             "uniform sampler2D Texture;",
             "varying vec2 Frag_UV;",
             "varying vec4 Frag_Color;",

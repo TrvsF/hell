@@ -808,8 +808,7 @@ System.register(["imgui-js"], function (exports_1, context_1) {
                     }
                 }
                 MemoryEditor.Sizes = Sizes;
-            })(MemoryEditor || (MemoryEditor = {}));
-            exports_1("MemoryEditor", MemoryEditor);
+            })(MemoryEditor || (exports_1("MemoryEditor", MemoryEditor = {})));
         }
     };
 });

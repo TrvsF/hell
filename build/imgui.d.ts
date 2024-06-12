@@ -55,206 +55,206 @@ export type ImGuiID = Bind.ImGuiID;
 export { ImGuiWindowFlags as WindowFlags };
 export declare enum ImGuiWindowFlags {
     None = 0,
-    NoTitleBar = 1,
-    NoResize = 2,
-    NoMove = 4,
-    NoScrollbar = 8,
-    NoScrollWithMouse = 16,
-    NoCollapse = 32,
-    AlwaysAutoResize = 64,
-    NoBackground = 128,
-    NoSavedSettings = 256,
-    NoMouseInputs = 512,
-    MenuBar = 1024,
-    HorizontalScrollbar = 2048,
-    NoFocusOnAppearing = 4096,
-    NoBringToFrontOnFocus = 8192,
-    AlwaysVerticalScrollbar = 16384,
-    AlwaysHorizontalScrollbar = 32768,
-    AlwaysUseWindowPadding = 65536,
-    NoNavInputs = 262144,
-    NoNavFocus = 524288,
-    UnsavedDocument = 1048576,
+    NoTitleBar = 1,// Disable title-bar
+    NoResize = 2,// Disable user resizing with the lower-right grip
+    NoMove = 4,// Disable user moving the window
+    NoScrollbar = 8,// Disable scrollbars (window can still scroll with mouse or programatically)
+    NoScrollWithMouse = 16,// Disable user vertically scrolling with mouse wheel. On child window, mouse wheel will be forwarded to the parent unless NoScrollbar is also set.
+    NoCollapse = 32,// Disable user collapsing window by double-clicking on it
+    AlwaysAutoResize = 64,// Resize every window to its content every frame
+    NoBackground = 128,// Disable drawing background color (WindowBg, etc.) and outside border. Similar as using SetNextWindowBgAlpha(0.0f).
+    NoSavedSettings = 256,// Never load/save settings in .ini file
+    NoMouseInputs = 512,// Disable catching mouse or keyboard inputs, hovering test with pass through.
+    MenuBar = 1024,// Has a menu-bar
+    HorizontalScrollbar = 2048,// Allow horizontal scrollbar to appear (off by default). You may use SetNextWindowContentSize(ImVec2(width,0.0f)); prior to calling Begin() to specify width. Read code in imgui_demo in the "Horizontal Scrolling" section.
+    NoFocusOnAppearing = 4096,// Disable taking focus when transitioning from hidden to visible state
+    NoBringToFrontOnFocus = 8192,// Disable bringing window to front when taking focus (e.g. clicking on it or programatically giving it focus)
+    AlwaysVerticalScrollbar = 16384,// Always show vertical scrollbar (even if ContentSize.y < Size.y)
+    AlwaysHorizontalScrollbar = 32768,// Always show horizontal scrollbar (even if ContentSize.x < Size.x)
+    AlwaysUseWindowPadding = 65536,// Ensure child windows without border uses style.WindowPadding (ignored by default for non-bordered child windows, because more convenient)
+    NoNavInputs = 262144,// No gamepad/keyboard navigation within the window
+    NoNavFocus = 524288,// No focusing toward this window with gamepad/keyboard navigation (e.g. skipped by CTRL+TAB)
+    UnsavedDocument = 1048576,// Append '*' to title without affecting the ID, as a convenience to avoid using the ### operator. When used in a tab/docking context, tab is selected on closure and closure is deferred by one frame to allow code to cancel the closure (with a confirmation popup, etc.) without flicker.
     NoNav = 786432,
     NoDecoration = 43,
     NoInputs = 786944,
-    NavFlattened = 8388608,
-    ChildWindow = 16777216,
-    Tooltip = 33554432,
-    Popup = 67108864,
-    Modal = 134217728,
+    NavFlattened = 8388608,// (WIP) Allow gamepad/keyboard navigation to cross over parent border to this child (only use on child that have no scrolling!)
+    ChildWindow = 16777216,// Don't use! For internal use by BeginChild()
+    Tooltip = 33554432,// Don't use! For internal use by BeginTooltip()
+    Popup = 67108864,// Don't use! For internal use by BeginPopup()
+    Modal = 134217728,// Don't use! For internal use by BeginPopupModal()
     ChildMenu = 268435456
 }
 export { ImGuiInputTextFlags as InputTextFlags };
 export declare enum ImGuiInputTextFlags {
     None = 0,
-    CharsDecimal = 1,
-    CharsHexadecimal = 2,
-    CharsUppercase = 4,
-    CharsNoBlank = 8,
-    AutoSelectAll = 16,
-    EnterReturnsTrue = 32,
-    CallbackCompletion = 64,
-    CallbackHistory = 128,
-    CallbackAlways = 256,
-    CallbackCharFilter = 512,
-    AllowTabInput = 1024,
-    CtrlEnterForNewLine = 2048,
-    NoHorizontalScroll = 4096,
-    AlwaysOverwrite = 8192,
-    ReadOnly = 16384,
-    Password = 32768,
-    NoUndoRedo = 65536,
-    CharsScientific = 131072,
-    CallbackResize = 262144,
-    CallbackEdit = 524288,
-    Multiline = 1048576,
+    CharsDecimal = 1,// Allow 0123456789.+-*/
+    CharsHexadecimal = 2,// Allow 0123456789ABCDEFabcdef
+    CharsUppercase = 4,// Turn a..z into A..Z
+    CharsNoBlank = 8,// Filter out spaces, tabs
+    AutoSelectAll = 16,// Select entire text when first taking mouse focus
+    EnterReturnsTrue = 32,// Return 'true' when Enter is pressed (as opposed to when the value was modified)
+    CallbackCompletion = 64,// Call user function on pressing TAB (for completion handling)
+    CallbackHistory = 128,// Call user function on pressing Up/Down arrows (for history handling)
+    CallbackAlways = 256,// Call user function every time. User code may query cursor position, modify text buffer.
+    CallbackCharFilter = 512,// Call user function to filter character. Modify data->EventChar to replace/filter input, or return 1 to discard character.
+    AllowTabInput = 1024,// Pressing TAB input a '\t' character into the text field
+    CtrlEnterForNewLine = 2048,// In multi-line mode, unfocus with Enter, add new line with Ctrl+Enter (default is opposite: unfocus with Ctrl+Enter, add line with Enter).
+    NoHorizontalScroll = 4096,// Disable following the cursor horizontally
+    AlwaysOverwrite = 8192,// Overwrite mode
+    ReadOnly = 16384,// Read-only mode
+    Password = 32768,// Password mode, display all characters as '*'
+    NoUndoRedo = 65536,// Disable undo/redo. Note that input text owns the text data while active, if you want to provide your own undo/redo stack you need e.g. to call ClearActiveID().
+    CharsScientific = 131072,// Allow 0123456789.+-*/eE (Scientific notation input)
+    CallbackResize = 262144,// Allow buffer capacity resize + notify when the string wants to be resized (for string types which hold a cache of their Size) (see misc/stl/imgui_stl.h for an example of using this)
+    CallbackEdit = 524288,// Callback on any edit (note that InputText() already returns true on edit, the callback is useful mainly to manipulate the underlying buffer while focus is active)
+    Multiline = 1048576,// For internal use by InputTextMultiline()
     NoMarkEdited = 2097152
 }
 export { ImGuiTreeNodeFlags as TreeNodeFlags };
 export declare enum ImGuiTreeNodeFlags {
     None = 0,
-    Selected = 1,
-    Framed = 2,
-    AllowItemOverlap = 4,
-    NoTreePushOnOpen = 8,
-    NoAutoOpenOnLog = 16,
-    DefaultOpen = 32,
-    OpenOnDoubleClick = 64,
-    OpenOnArrow = 128,
-    Leaf = 256,
-    Bullet = 512,
-    FramePadding = 1024,
-    SpanAvailWidth = 2048,
-    SpanFullWidth = 4096,
-    NavLeftJumpsBackHere = 8192,
+    Selected = 1,// Draw as selected
+    Framed = 2,// Full colored frame (e.g. for CollapsingHeader)
+    AllowItemOverlap = 4,// Hit testing to allow subsequent widgets to overlap this one
+    NoTreePushOnOpen = 8,// Don't do a TreePush() when open (e.g. for CollapsingHeader) = no extra indent nor pushing on ID stack
+    NoAutoOpenOnLog = 16,// Don't automatically and temporarily open node when Logging is active (by default logging will automatically open tree nodes)
+    DefaultOpen = 32,// Default node to be open
+    OpenOnDoubleClick = 64,// Need double-click to open node
+    OpenOnArrow = 128,// Only open when clicking on the arrow part. If OpenOnDoubleClick is also set, single-click arrow or double-click all box to open.
+    Leaf = 256,// No collapsing, no arrow (use as a convenience for leaf nodes).
+    Bullet = 512,// Display a bullet instead of arrow
+    FramePadding = 1024,// Use FramePadding (even for an unframed text node) to vertically align text baseline to regular widget height. Equivalent to calling AlignTextToFramePadding().
+    SpanAvailWidth = 2048,// Extend hit box to the right-most edge, even if not framed. This is not the default in order to allow adding other items on the same line. In the future we may refactor the hit system to be front-to-back, allowing natural overlaps and then this can become the default.
+    SpanFullWidth = 4096,// Extend hit box to the left-most and right-most edges (bypass the indented area).
+    NavLeftJumpsBackHere = 8192,// (WIP) Nav: left direction may move to this TreeNode() from any of its child (items submitted between TreeNode and TreePop)
     CollapsingHeader = 26
 }
 export { ImGuiPopupFlags as PopupFlags };
 export declare enum ImGuiPopupFlags {
     None = 0,
-    MouseButtonLeft = 0,
-    MouseButtonRight = 1,
-    MouseButtonMiddle = 2,
+    MouseButtonLeft = 0,// For BeginPopupContext*(): open on Left Mouse release. Guaranteed to always be == 0 (same as ImGuiMouseButton_Left)
+    MouseButtonRight = 1,// For BeginPopupContext*(): open on Right Mouse release. Guaranteed to always be == 1 (same as ImGuiMouseButton_Right)
+    MouseButtonMiddle = 2,// For BeginPopupContext*(): open on Middle Mouse release. Guaranteed to always be == 2 (same as ImGuiMouseButton_Middle)
     MouseButtonMask_ = 31,
     MouseButtonDefault_ = 1,
-    NoOpenOverExistingPopup = 32,
-    NoOpenOverItems = 64,
-    AnyPopupId = 128,
-    AnyPopupLevel = 256,
+    NoOpenOverExistingPopup = 32,// For OpenPopup*(), BeginPopupContext*(): don't open if there's already a popup at the same level of the popup stack
+    NoOpenOverItems = 64,// For BeginPopupContextWindow(): don't return true when hovering items, only when hovering empty space
+    AnyPopupId = 128,// For IsPopupOpen(): ignore the ImGuiID parameter and test for any popup.
+    AnyPopupLevel = 256,// For IsPopupOpen(): search/test at any level of the popup stack (default test in the current level)
     AnyPopup = 384
 }
 export { ImGuiSelectableFlags as SelectableFlags };
 export declare enum ImGuiSelectableFlags {
     None = 0,
-    DontClosePopups = 1,
-    SpanAllColumns = 2,
-    AllowDoubleClick = 4,
-    Disabled = 8,
+    DontClosePopups = 1,// Clicking this don't close parent popup window
+    SpanAllColumns = 2,// Selectable frame can span all columns (text will still fit in current column)
+    AllowDoubleClick = 4,// Generate press events on double clicks too
+    Disabled = 8,// Cannot be selected, display greyed out text
     AllowItemOverlap = 16
 }
 export { ImGuiComboFlags as ComboFlags };
 export declare enum ImGuiComboFlags {
     None = 0,
-    PopupAlignLeft = 1,
-    HeightSmall = 2,
-    HeightRegular = 4,
-    HeightLarge = 8,
-    HeightLargest = 16,
-    NoArrowButton = 32,
-    NoPreview = 64,
+    PopupAlignLeft = 1,// Align the popup toward the left by default
+    HeightSmall = 2,// Max ~4 items visible. Tip: If you want your combo popup to be a specific size you can use SetNextWindowSizeConstraints() prior to calling BeginCombo()
+    HeightRegular = 4,// Max ~8 items visible (default)
+    HeightLarge = 8,// Max ~20 items visible
+    HeightLargest = 16,// As many fitting items as possible
+    NoArrowButton = 32,// Display on the preview box without the square arrow button
+    NoPreview = 64,// Display only a square arrow button
     HeightMask_ = 30
 }
 export { ImGuiTabBarFlags as TabBarFlags };
 export declare enum ImGuiTabBarFlags {
     None = 0,
-    Reorderable = 1,
-    AutoSelectNewTabs = 2,
+    Reorderable = 1,// Allow manually dragging tabs to re-order them + New tabs are appended at the end of list
+    AutoSelectNewTabs = 2,// Automatically select new tabs when they appear
     TabListPopupButton = 4,
-    NoCloseWithMiddleMouseButton = 8,
+    NoCloseWithMiddleMouseButton = 8,// Disable behavior of closing tabs (that are submitted with p_open != NULL) with middle mouse button. You can still repro this behavior on user's side with if (IsItemHovered() && IsMouseClicked(2)) *p_open = false.
     NoTabListScrollingButtons = 16,
-    NoTooltip = 32,
-    FittingPolicyResizeDown = 64,
-    FittingPolicyScroll = 128,
+    NoTooltip = 32,// Disable tooltips when hovering a tab
+    FittingPolicyResizeDown = 64,// Resize tabs when they don't fit
+    FittingPolicyScroll = 128,// Add scroll buttons when tabs don't fit
     FittingPolicyMask_ = 192,
     FittingPolicyDefault_ = 64
 }
 export { ImGuiTabItemFlags as TabItemFlags };
 export declare enum ImGuiTabItemFlags {
     None = 0,
-    UnsavedDocument = 1,
-    SetSelected = 2,
-    NoCloseWithMiddleMouseButton = 4,
-    NoPushId = 8,
-    NoTooltip = 16,
-    NoReorder = 32,
-    Leading = 64,
+    UnsavedDocument = 1,// Append '*' to title without affecting the ID, as a convenience to avoid using the ### operator. Also: tab is selected on closure and closure is deferred by one frame to allow code to undo it without flicker.
+    SetSelected = 2,// Trigger flag to programatically make the tab selected when calling BeginTabItem()
+    NoCloseWithMiddleMouseButton = 4,// Disable behavior of closing tabs (that are submitted with p_open != NULL) with middle mouse button. You can still repro this behavior on user's side with if (IsItemHovered() && IsMouseClicked(2)) *p_open = false.
+    NoPushId = 8,// Don't call PushID(tab->ID)/PopID() on BeginTabItem()/EndTabItem()
+    NoTooltip = 16,// Disable tooltip for the given tab
+    NoReorder = 32,// Disable reordering this tab or having another tab cross over this tab
+    Leading = 64,// Enforce the tab position to the left of the tab bar (after the tab list popup button)
     Trailing = 128
 }
 export { ImGuiTableFlags as TableFlags };
 export declare enum ImGuiTableFlags {
     None = 0,
-    Resizable = 1,
-    Reorderable = 2,
-    Hideable = 4,
-    Sortable = 8,
-    NoSavedSettings = 16,
-    ContextMenuInBody = 32,
-    RowBg = 64,
-    BordersInnerH = 128,
-    BordersOuterH = 256,
-    BordersInnerV = 512,
-    BordersOuterV = 1024,
-    BordersH = 384,
-    BordersV = 1536,
-    BordersInner = 640,
-    BordersOuter = 1280,
-    Borders = 1920,
-    NoBordersInBody = 2048,
-    NoBordersInBodyUntilResize = 4096,
-    SizingFixedFit = 8192,
-    SizingFixedSame = 16384,
-    SizingStretchProp = 24576,
-    SizingStretchSame = 32768,
-    NoHostExtendX = 65536,
-    NoHostExtendY = 131072,
-    NoKeepColumnsVisible = 262144,
-    PreciseWidths = 524288,
-    NoClip = 1048576,
-    PadOuterX = 2097152,
-    NoPadOuterX = 4194304,
-    NoPadInnerX = 8388608,
-    ScrollX = 16777216,
-    ScrollY = 33554432,
-    SortMulti = 67108864,
-    SortTristate = 134217728,
+    Resizable = 1,// Enable resizing columns.
+    Reorderable = 2,// Enable reordering columns in header row (need calling TableSetupColumn() + TableHeadersRow() to display headers)
+    Hideable = 4,// Enable hiding/disabling columns in context menu.
+    Sortable = 8,// Enable sorting. Call TableGetSortSpecs() to obtain sort specs. Also see ImGuiTableFlags_SortMulti and ImGuiTableFlags_SortTristate.
+    NoSavedSettings = 16,// Disable persisting columns order, width and sort settings in the .ini file.
+    ContextMenuInBody = 32,// Right-click on columns body/contents will display table context menu. By default it is available in TableHeadersRow().
+    RowBg = 64,// Set each RowBg color with ImGuiCol_TableRowBg or ImGuiCol_TableRowBgAlt (equivalent of calling TableSetBgColor with ImGuiTableBgFlags_RowBg0 on each row manually)
+    BordersInnerH = 128,// Draw horizontal borders between rows.
+    BordersOuterH = 256,// Draw horizontal borders at the top and bottom.
+    BordersInnerV = 512,// Draw vertical borders between columns.
+    BordersOuterV = 1024,// Draw vertical borders on the left and right sides.
+    BordersH = 384,// Draw horizontal borders.
+    BordersV = 1536,// Draw vertical borders.
+    BordersInner = 640,// Draw inner borders.
+    BordersOuter = 1280,// Draw outer borders.
+    Borders = 1920,// Draw all borders.
+    NoBordersInBody = 2048,// [ALPHA] Disable vertical borders in columns Body (borders will always appears in Headers). -> May move to style
+    NoBordersInBodyUntilResize = 4096,// [ALPHA] Disable vertical borders in columns Body until hovered for resize (borders will always appears in Headers). -> May move to style
+    SizingFixedFit = 8192,// Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching contents width.
+    SizingFixedSame = 16384,// Columns default to _WidthFixed or _WidthAuto (if resizable or not resizable), matching the maximum contents width of all columns. Implicitly enable ImGuiTableFlags_NoKeepColumnsVisible.
+    SizingStretchProp = 24576,// Columns default to _WidthStretch with default weights proportional to each columns contents widths.
+    SizingStretchSame = 32768,// Columns default to _WidthStretch with default weights all equal, unless overridden by TableSetupColumn().
+    NoHostExtendX = 65536,// Make outer width auto-fit to columns, overriding outer_size.x value. Only available when ScrollX/ScrollY are disabled and Stretch columns are not used.
+    NoHostExtendY = 131072,// Make outer height stop exactly at outer_size.y (prevent auto-extending table past the limit). Only available when ScrollX/ScrollY are disabled. Data below the limit will be clipped and not visible.
+    NoKeepColumnsVisible = 262144,// Disable keeping column always minimally visible when ScrollX is off and table gets too small. Not recommended if columns are resizable.
+    PreciseWidths = 524288,// Disable distributing remainder width to stretched columns (width allocation on a 100-wide table with 3 columns: Without this flag: 33,33,34. With this flag: 33,33,33). With larger number of columns, resizing will appear to be less smooth.
+    NoClip = 1048576,// Disable clipping rectangle for every individual columns (reduce draw command count, items will be able to overflow into other columns). Generally incompatible with TableSetupScrollFreeze().
+    PadOuterX = 2097152,// Default if BordersOuterV is on. Enable outer-most padding. Generally desirable if you have headers.
+    NoPadOuterX = 4194304,// Default if BordersOuterV is off. Disable outer-most padding.
+    NoPadInnerX = 8388608,// Disable inner padding between columns (double inner padding if BordersOuterV is on, single inner padding if BordersOuterV is off).
+    ScrollX = 16777216,// Enable horizontal scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size. Changes default sizing policy. Because this create a child window, ScrollY is currently generally recommended when using ScrollX.
+    ScrollY = 33554432,// Enable vertical scrolling. Require 'outer_size' parameter of BeginTable() to specify the container size.
+    SortMulti = 67108864,// Hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).
+    SortTristate = 134217728,// Allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).
     SizingMask_ = 57344
 }
 export { ImGuiTableColumnFlags as TableColumnFlags };
 export declare enum ImGuiTableColumnFlags {
     None = 0,
-    Disabled = 1,
-    DefaultHide = 2,
-    DefaultSort = 4,
-    WidthStretch = 8,
-    WidthFixed = 16,
-    NoResize = 32,
-    NoReorder = 64,
-    NoHide = 128,
-    NoClip = 256,
-    NoSort = 512,
-    NoSortAscending = 1024,
-    NoSortDescending = 2048,
-    NoHeaderLabel = 4096,
-    NoHeaderWidth = 8192,
-    PreferSortAscending = 16384,
-    PreferSortDescending = 32768,
-    IndentEnable = 65536,
-    IndentDisable = 131072,
-    IsEnabled = 16777216,
-    IsVisible = 33554432,
-    IsSorted = 67108864,
-    IsHovered = 134217728,
+    Disabled = 1,// Overriding/master disable flag: hide column, won't show in context menu (unlike calling TableSetColumnEnabled() which manipulates the user accessible state)
+    DefaultHide = 2,// Default as a hidden/disabled column.
+    DefaultSort = 4,// Default as a sorting column.
+    WidthStretch = 8,// Column will stretch. Preferable with horizontal scrolling disabled (default if table sizing policy is _SizingStretchSame or _SizingStretchProp).
+    WidthFixed = 16,// Column will not stretch. Preferable with horizontal scrolling enabled (default if table sizing policy is _SizingFixedFit and table is resizable).
+    NoResize = 32,// Disable manual resizing.
+    NoReorder = 64,// Disable manual reordering this column, this will also prevent other columns from crossing over this column.
+    NoHide = 128,// Disable ability to hide/disable this column.
+    NoClip = 256,// Disable clipping for this column (all NoClip columns will render in a same draw command).
+    NoSort = 512,// Disable ability to sort on this field (even if ImGuiTableFlags_Sortable is set on the table).
+    NoSortAscending = 1024,// Disable ability to sort in the ascending direction.
+    NoSortDescending = 2048,// Disable ability to sort in the descending direction.
+    NoHeaderLabel = 4096,// TableHeadersRow() will not submit label for this column. Convenient for some small columns. Name will still appear in context menu.
+    NoHeaderWidth = 8192,// Disable header text width contribution to automatic column width.
+    PreferSortAscending = 16384,// Make the initial sort direction Ascending when first sorting on this column (default).
+    PreferSortDescending = 32768,// Make the initial sort direction Descending when first sorting on this column.
+    IndentEnable = 65536,// Use current Indent value when entering cell (default for column 0).
+    IndentDisable = 131072,// Ignore current Indent value when entering cell (default for columns > 0). Indentation changes _within_ the cell will still be honored.
+    IsEnabled = 16777216,// Status: is enabled == not hidden by user/api (referred to as "Hide" in _DefaultHide and _NoHide) flags.
+    IsVisible = 33554432,// Status: is visible == is enabled AND not clipped by scrolling.
+    IsSorted = 67108864,// Status: is currently part of the sort specs
+    IsHovered = 134217728,// Status: is hovered by mouse
     WidthMask_ = 24,
     IndentMask_ = 196608,
     StatusMask_ = 251658240,
@@ -268,61 +268,61 @@ export declare enum ImGuiTableRowFlags {
 export { ImGuiTableBgTarget as TableBgTarget };
 export declare enum ImGuiTableBgTarget {
     None = 0,
-    RowBg0 = 1,
-    RowBg1 = 2,
+    RowBg0 = 1,// Set row background color 0 (generally used for background, automatically set when ImGuiTableFlags_RowBg is used)
+    RowBg1 = 2,// Set row background color 1 (generally used for selection marking)
     CellBg = 3
 }
 export { ImGuiFocusedFlags as FocusedFlags };
 export declare enum ImGuiFocusedFlags {
     None = 0,
-    ChildWindows = 1,
-    RootWindow = 2,
-    AnyWindow = 4,
-    NoPopupHierarchy = 8,
+    ChildWindows = 1,// Return true if any children of the window is focused
+    RootWindow = 2,// Test from root window (top most parent of the current hierarchy)
+    AnyWindow = 4,// Return true if any window is focused. Important: If you are trying to tell how to dispatch your low-level inputs, do NOT use this. Use 'io.WantCaptureMouse' instead! Please read the FAQ!
+    NoPopupHierarchy = 8,// Do not consider popup hierarchy (do not treat popup emitter as parent of popup) (when used with _ChildWindows or _RootWindow)
     RootAndChildWindows = 3
 }
 export { ImGuiHoveredFlags as HoveredFlags };
 export declare enum ImGuiHoveredFlags {
-    None = 0,
-    ChildWindows = 1,
-    RootWindow = 2,
-    AnyWindow = 4,
-    NoPopupHierarchy = 8,
-    AllowWhenBlockedByPopup = 32,
-    AllowWhenBlockedByActiveItem = 128,
-    AllowWhenOverlapped = 256,
-    AllowWhenDisabled = 512,
+    None = 0,// Return true if directly over the item/window, not obstructed by another window, not obstructed by an active popup or modal blocking inputs under them.
+    ChildWindows = 1,// IsWindowHovered() only: Return true if any children of the window is hovered
+    RootWindow = 2,// IsWindowHovered() only: Test from root window (top most parent of the current hierarchy)
+    AnyWindow = 4,// IsWindowHovered() only: Return true if any window is hovered
+    NoPopupHierarchy = 8,// IsWindowHovered() only: Do not consider popup hierarchy (do not treat popup emitter as parent of popup) (when used with _ChildWindows or _RootWindow)
+    AllowWhenBlockedByPopup = 32,// Return true even if a popup window is normally blocking access to this item/window
+    AllowWhenBlockedByActiveItem = 128,// Return true even if an active item is blocking access to this item/window. Useful for Drag and Drop patterns.
+    AllowWhenOverlapped = 256,// IsItemHovered() only: Return true even if the position is obstructed or overlapped by another window
+    AllowWhenDisabled = 512,// IsItemHovered() only: Return true even if the item is disabled
     RectOnly = 416,
     RootAndChildWindows = 3
 }
 export { ImGuiDragDropFlags as DragDropFlags };
 export declare enum ImGuiDragDropFlags {
     None = 0,
-    SourceNoPreviewTooltip = 1,
-    SourceNoDisableHover = 2,
-    SourceNoHoldToOpenOthers = 4,
-    SourceAllowNullID = 8,
-    SourceExtern = 16,
-    SourceAutoExpirePayload = 32,
-    AcceptBeforeDelivery = 1024,
-    AcceptNoDrawDefaultRect = 2048,
-    AcceptNoPreviewTooltip = 4096,
+    SourceNoPreviewTooltip = 1,// By default, a successful call to BeginDragDropSource opens a tooltip so you can display a preview or description of the source contents. This flag disable this behavior.
+    SourceNoDisableHover = 2,// By default, when dragging we clear data so that IsItemHovered() will return true, to avoid subsequent user code submitting tooltips. This flag disable this behavior so you can still call IsItemHovered() on the source item.
+    SourceNoHoldToOpenOthers = 4,// Disable the behavior that allows to open tree nodes and collapsing header by holding over them while dragging a source item.
+    SourceAllowNullID = 8,// Allow items such as Text(), Image() that have no unique identifier to be used as drag source, by manufacturing a temporary identifier based on their window-relative position. This is extremely unusual within the dear imgui ecosystem and so we made it explicit.
+    SourceExtern = 16,// External source (from outside of imgui), won't attempt to read current item/window info. Will always return true. Only one Extern source can be active simultaneously.
+    SourceAutoExpirePayload = 32,// Automatically expire the payload if the source cease to be submitted (otherwise payloads are persisting while being dragged)
+    AcceptBeforeDelivery = 1024,// AcceptDragDropPayload() will returns true even before the mouse button is released. You can then call IsDelivery() to test if the payload needs to be delivered.
+    AcceptNoDrawDefaultRect = 2048,// Do not draw the default highlight rectangle when hovering over target.
+    AcceptNoPreviewTooltip = 4096,// Request hiding the BeginDragDropSource tooltip from the BeginDragDropTarget site.
     AcceptPeekOnly = 3072
 }
 export declare const IMGUI_PAYLOAD_TYPE_COLOR_3F: string;
 export declare const IMGUI_PAYLOAD_TYPE_COLOR_4F: string;
 export { ImGuiDataType as DataType };
 export declare enum ImGuiDataType {
-    S8 = 0,
-    U8 = 1,
-    S16 = 2,
-    U16 = 3,
-    S32 = 4,
-    U32 = 5,
-    S64 = 6,
-    U64 = 7,
-    Float = 8,
-    Double = 9,
+    S8 = 0,// char
+    U8 = 1,// unsigned char
+    S16 = 2,// short
+    U16 = 3,// unsigned short
+    S32 = 4,// int
+    U32 = 5,// unsigned int
+    S64 = 6,// long long, __int64
+    U64 = 7,// unsigned long long, unsigned __int64
+    Float = 8,// float
+    Double = 9,// double
     COUNT = 10
 }
 export { ImGuiDir as Dir };
@@ -337,7 +337,7 @@ export declare enum ImGuiDir {
 export { ImGuiSortDirection as SortDirection };
 export declare enum ImGuiSortDirection {
     None = 0,
-    Ascending = 1,
+    Ascending = 1,// Ascending = 0->9, A->Z etc.
     Descending = 2
 }
 export { ImGuiKey as Key };
@@ -358,12 +358,12 @@ export declare enum ImGuiKey {
     Enter = 13,
     Escape = 14,
     KeyPadEnter = 15,
-    A = 16,
-    C = 17,
-    V = 18,
-    X = 19,
-    Y = 20,
-    Z = 21,
+    A = 16,// for text edit CTRL+A: select all
+    C = 17,// for text edit CTRL+C: copy
+    V = 18,// for text edit CTRL+V: paste
+    X = 19,// for text edit CTRL+X: cut
+    Y = 20,// for text edit CTRL+Y: redo
+    Z = 21,// for text edit CTRL+Z: undo
     COUNT = 22
 }
 export { ImGuiKeyModFlags as KeyModFlags };
@@ -376,51 +376,51 @@ export declare enum ImGuiKeyModFlags {
 }
 export { ImGuiNavInput as NavInput };
 export declare enum ImGuiNavInput {
-    Activate = 0,
-    Cancel = 1,
-    Input = 2,
-    Menu = 3,
-    DpadLeft = 4,
-    DpadRight = 5,
-    DpadUp = 6,
-    DpadDown = 7,
-    LStickLeft = 8,
-    LStickRight = 9,
-    LStickUp = 10,
-    LStickDown = 11,
-    FocusPrev = 12,
-    FocusNext = 13,
-    TweakSlow = 14,
-    TweakFast = 15,
-    KeyLeft_ = 16,
-    KeyRight_ = 17,
-    KeyUp_ = 18,
-    KeyDown_ = 19,
+    Activate = 0,// activate / open / toggle / tweak value       // e.g. Circle (PS4), A (Xbox), B (Switch), Space (Keyboard)
+    Cancel = 1,// cancel / close / exit                        // e.g. Cross  (PS4), B (Xbox), A (Switch), Escape (Keyboard)
+    Input = 2,// text input / on-screen keyboard              // e.g. Triang.(PS4), Y (Xbox), X (Switch), Return (Keyboard)
+    Menu = 3,// tap: toggle menu / hold: focus, move, resize // e.g. Square (PS4), X (Xbox), Y (Switch), Alt (Keyboard)
+    DpadLeft = 4,// move / tweak / resize window (w/ PadMenu)    // e.g. D-pad Left/Right/Up/Down (Gamepads), Arrow keys (Keyboard)
+    DpadRight = 5,//
+    DpadUp = 6,//
+    DpadDown = 7,//
+    LStickLeft = 8,// scroll / move window (w/ PadMenu)            // e.g. Left Analog Stick Left/Right/Up/Down
+    LStickRight = 9,//
+    LStickUp = 10,//
+    LStickDown = 11,//
+    FocusPrev = 12,// next window (w/ PadMenu)                     // e.g. L1 or L2 (PS4), LB or LT (Xbox), L or ZL (Switch)
+    FocusNext = 13,// prev window (w/ PadMenu)                     // e.g. R1 or R2 (PS4), RB or RT (Xbox), R or ZL (Switch)
+    TweakSlow = 14,// slower tweaks                                // e.g. L1 or L2 (PS4), LB or LT (Xbox), L or ZL (Switch)
+    TweakFast = 15,// faster tweaks                                // e.g. R1 or R2 (PS4), RB or RT (Xbox), R or ZL (Switch)
+    KeyLeft_ = 16,// move left                                    // = Arrow keys
+    KeyRight_ = 17,// move right
+    KeyUp_ = 18,// move up
+    KeyDown_ = 19,// move down
     COUNT = 20,
     InternalStart_ = 16
 }
 export { ImGuiConfigFlags as ConfigFlags };
 export declare enum ImGuiConfigFlags {
     None = 0,
-    NavEnableKeyboard = 1,
-    NavEnableGamepad = 2,
-    NavEnableSetMousePos = 4,
-    NavNoCaptureKeyboard = 8,
-    NoMouse = 16,
-    NoMouseCursorChange = 32,
-    IsSRGB = 1048576,
+    NavEnableKeyboard = 1,// Master keyboard navigation enable flag. NewFrame() will automatically fill io.NavInputs[] based on io.KeyDown[].
+    NavEnableGamepad = 2,// Master gamepad navigation enable flag. This is mostly to instruct your imgui back-end to fill io.NavInputs[].
+    NavEnableSetMousePos = 4,// Request navigation to allow moving the mouse cursor. May be useful on TV/console systems where moving a virtual mouse is awkward. Will update io.MousePos and set io.WantMoveMouse=true. If enabled you MUST honor io.WantMoveMouse requests in your binding, otherwise ImGui will react as if the mouse is jumping around back and forth.
+    NavNoCaptureKeyboard = 8,// Do not set the io.WantCaptureKeyboard flag with io.NavActive is set.
+    NoMouse = 16,// Instruct imgui to clear mouse position/buttons in NewFrame(). This allows ignoring the mouse information back-end
+    NoMouseCursorChange = 32,// Instruct back-end to not alter mouse cursor shape and visibility.
+    IsSRGB = 1048576,// Application is SRGB-aware.
     IsTouchScreen = 2097152
 }
 export { ImGuiCol as Col };
 export declare enum ImGuiCol {
     Text = 0,
     TextDisabled = 1,
-    WindowBg = 2,
-    ChildBg = 3,
-    PopupBg = 4,
+    WindowBg = 2,// Background of normal windows
+    ChildBg = 3,// Background of child windows
+    PopupBg = 4,// Background of popups, menus, tooltips windows
     Border = 5,
     BorderShadow = 6,
-    FrameBg = 7,
+    FrameBg = 7,// Background of checkbox, radio button, plot, slider, text input
     FrameBgHovered = 8,
     FrameBgActive = 9,
     TitleBg = 10,
@@ -455,91 +455,91 @@ export declare enum ImGuiCol {
     PlotLinesHovered = 39,
     PlotHistogram = 40,
     PlotHistogramHovered = 41,
-    TableHeaderBg = 42,
-    TableBorderStrong = 43,
-    TableBorderLight = 44,
-    TableRowBg = 45,
-    TableRowBgAlt = 46,
+    TableHeaderBg = 42,// Table header background
+    TableBorderStrong = 43,// Table outer and header borders (prefer using Alpha=1.0 here)
+    TableBorderLight = 44,// Table inner borders (prefer using Alpha=1.0 here)
+    TableRowBg = 45,// Table row background (even rows)
+    TableRowBgAlt = 46,// Table row background (odd rows)
     TextSelectedBg = 47,
     DragDropTarget = 48,
-    NavHighlight = 49,
-    NavWindowingHighlight = 50,
-    NavWindowingDimBg = 51,
-    ModalWindowDimBg = 52,
+    NavHighlight = 49,// Gamepad/keyboard: current highlighted item
+    NavWindowingHighlight = 50,// Highlight window when using CTRL+TAB
+    NavWindowingDimBg = 51,// Darken/colorize entire screen behind the CTRL+TAB window list, when active
+    ModalWindowDimBg = 52,// Darken/colorize entire screen behind a modal window, when one is active
     COUNT = 53
 }
 export { ImGuiStyleVar as StyleVar };
 export declare enum ImGuiStyleVar {
-    Alpha = 0,
-    DisabledAlpha = 1,
-    WindowPadding = 2,
-    WindowRounding = 3,
-    WindowBorderSize = 4,
-    WindowMinSize = 5,
-    WindowTitleAlign = 6,
-    ChildRounding = 7,
-    ChildBorderSize = 8,
-    PopupRounding = 9,
-    PopupBorderSize = 10,
-    FramePadding = 11,
-    FrameRounding = 12,
-    FrameBorderSize = 13,
-    ItemSpacing = 14,
-    ItemInnerSpacing = 15,
-    IndentSpacing = 16,
-    CellPadding = 17,
-    ScrollbarSize = 18,
-    ScrollbarRounding = 19,
-    GrabMinSize = 20,
-    GrabRounding = 21,
-    TabRounding = 22,
-    ButtonTextAlign = 23,
-    SelectableTextAlign = 24,
+    Alpha = 0,// float     Alpha
+    DisabledAlpha = 1,// float     DisabledAlpha
+    WindowPadding = 2,// ImVec2    WindowPadding
+    WindowRounding = 3,// float     WindowRounding
+    WindowBorderSize = 4,// float     WindowBorderSize
+    WindowMinSize = 5,// ImVec2    WindowMinSize
+    WindowTitleAlign = 6,// ImVec2    WindowTitleAlign
+    ChildRounding = 7,// float     ChildRounding
+    ChildBorderSize = 8,// float     ChildBorderSize
+    PopupRounding = 9,// float     PopupRounding
+    PopupBorderSize = 10,// float     PopupBorderSize
+    FramePadding = 11,// ImVec2    FramePadding
+    FrameRounding = 12,// float     FrameRounding
+    FrameBorderSize = 13,// float     FrameBorderSize
+    ItemSpacing = 14,// ImVec2    ItemSpacing
+    ItemInnerSpacing = 15,// ImVec2    ItemInnerSpacing
+    IndentSpacing = 16,// float     IndentSpacing
+    CellPadding = 17,// ImVec2    CellPadding
+    ScrollbarSize = 18,// float     ScrollbarSize
+    ScrollbarRounding = 19,// float     ScrollbarRounding
+    GrabMinSize = 20,// float     GrabMinSize
+    GrabRounding = 21,// float     GrabRounding
+    TabRounding = 22,// float     TabRounding
+    ButtonTextAlign = 23,// ImVec2    ButtonTextAlign
+    SelectableTextAlign = 24,// ImVec2    SelectableTextAlign
     COUNT = 25
 }
 export { ImGuiBackendFlags as BackendFlags };
 export declare enum ImGuiBackendFlags {
     None = 0,
-    HasGamepad = 1,
-    HasMouseCursors = 2,
-    HasSetMousePos = 4,
+    HasGamepad = 1,// Back-end has a connected gamepad.
+    HasMouseCursors = 2,// Back-end can honor GetMouseCursor() values and change the OS cursor shape.
+    HasSetMousePos = 4,// Back-end can honor io.WantSetMousePos and reposition the mouse (only used if ImGuiConfigFlags_NavEnableSetMousePos is set).
     RendererHasVtxOffset = 8
 }
 export { ImGuiButtonFlags as ButtonFlags };
 export declare enum ImGuiButtonFlags {
     None = 0,
-    MouseButtonLeft = 1,
-    MouseButtonRight = 2,
-    MouseButtonMiddle = 4,
+    MouseButtonLeft = 1,// React on left mouse button (default)
+    MouseButtonRight = 2,// React on right mouse button
+    MouseButtonMiddle = 4,// React on center mouse button
     MouseButtonMask_ = 7,
     MouseButtonDefault_ = 1
 }
 export { ImGuiColorEditFlags as ColorEditFlags };
 export declare enum ImGuiColorEditFlags {
     None = 0,
-    NoAlpha = 2,
-    NoPicker = 4,
-    NoOptions = 8,
-    NoSmallPreview = 16,
-    NoInputs = 32,
-    NoTooltip = 64,
-    NoLabel = 128,
-    NoSidePreview = 256,
-    NoDragDrop = 512,
-    NoBorder = 1024,
-    AlphaBar = 65536,
-    AlphaPreview = 131072,
-    AlphaPreviewHalf = 262144,
-    HDR = 524288,
-    DisplayRGB = 1048576,
-    DisplayHSV = 2097152,
-    DisplayHex = 4194304,
-    Uint8 = 8388608,
-    Float = 16777216,
-    PickerHueBar = 33554432,
-    PickerHueWheel = 67108864,
-    InputRGB = 134217728,
-    InputHSV = 268435456,
+    NoAlpha = 2,//              // ColorEdit, ColorPicker, ColorButton: ignore Alpha component (read 3 components from the input pointer).
+    NoPicker = 4,//              // ColorEdit: disable picker when clicking on colored square.
+    NoOptions = 8,//              // ColorEdit: disable toggling options menu when right-clicking on inputs/small preview.
+    NoSmallPreview = 16,//              // ColorEdit, ColorPicker: disable colored square preview next to the inputs. (e.g. to show only the inputs)
+    NoInputs = 32,//              // ColorEdit, ColorPicker: disable inputs sliders/text widgets (e.g. to show only the small preview colored square).
+    NoTooltip = 64,//              // ColorEdit, ColorPicker, ColorButton: disable tooltip when hovering the preview.
+    NoLabel = 128,//              // ColorEdit, ColorPicker: disable display of inline text label (the label is still forwarded to the tooltip and picker).
+    NoSidePreview = 256,//              // ColorPicker: disable bigger color preview on right side of the picker, use small colored square preview instead.
+    NoDragDrop = 512,//              // ColorEdit: disable drag and drop target. ColorButton: disable drag and drop source.
+    NoBorder = 1024,//              // ColorButton: disable border (which is enforced by default)
+    AlphaBar = 65536,//              // ColorEdit, ColorPicker: show vertical alpha bar/gradient in picker.
+    AlphaPreview = 131072,//              // ColorEdit, ColorPicker, ColorButton: display preview as a transparent color over a checkerboard, instead of opaque.
+    AlphaPreviewHalf = 262144,//              // ColorEdit, ColorPicker, ColorButton: display half opaque / half checkerboard, instead of opaque.
+    HDR = 524288,//              // (WIP) ColorEdit: Currently only disable 0.0f..1.0f limits in RGBA edition (note: you probably want to use Float flag as well).
+    DisplayRGB = 1048576,// [Inputs]     // ColorEdit: choose one among RGB/HSV/HEX. ColorPicker: choose any combination using RGB/HSV/HEX.
+    DisplayHSV = 2097152,// [Inputs]     // "
+    DisplayHex = 4194304,// [Inputs]     // "
+    Uint8 = 8388608,// [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0..255.
+    Float = 16777216,// [DataType]   // ColorEdit, ColorPicker, ColorButton: _display_ values formatted as 0.0f..1.0f floats instead of 0..255 integers. No round-trip of value via integers.
+    PickerHueBar = 33554432,// [PickerMode] // ColorPicker: bar for Hue, rectangle for Sat/Value.
+    PickerHueWheel = 67108864,// [PickerMode] // ColorPicker: wheel for Hue, triangle for Sat/Value.
+    InputRGB = 134217728,// [Input]      // ColorEdit, ColorPicker: input and output data in RGB format.
+    InputHSV = 268435456,// [Input]      // ColorEdit, ColorPicker: input and output data in HSV format.
     DefaultOptions_ = 177209344,
     DisplayMask_ = 7340032,
     DataTypeMask_ = 25165824,
@@ -549,10 +549,10 @@ export declare enum ImGuiColorEditFlags {
 export { ImGuiSliderFlags as SliderFlags };
 export declare enum ImGuiSliderFlags {
     None = 0,
-    AlwaysClamp = 16,
-    Logarithmic = 32,
-    NoRoundToFormat = 64,
-    NoInput = 128,
+    AlwaysClamp = 16,// Clamp value to min/max bounds when input manually with CTRL+Click. By default CTRL+Click allows going out of bounds.
+    Logarithmic = 32,// Make the widget logarithmic (linear otherwise). Consider using ImGuiSliderFlags_NoRoundToFormat with this if using a format-string with small amount of digits.
+    NoRoundToFormat = 64,// Disable rounding underlying value to match precision of the display format string (e.g. %.3f values are rounded to those 3 digits)
+    NoInput = 128,// Disable CTRL+Click or Enter key allowing to input text directly into the widget
     InvalidMask_ = 1879048207
 }
 export { ImGuiMouseButton as MouseButton };
@@ -566,47 +566,47 @@ export { ImGuiMouseCursor as MouseCursor };
 export declare enum ImGuiMouseCursor {
     None = -1,
     Arrow = 0,
-    TextInput = 1,
-    ResizeAll = 2,
-    ResizeNS = 3,
-    ResizeEW = 4,
-    ResizeNESW = 5,
-    ResizeNWSE = 6,
-    Hand = 7,
-    NotAllowed = 8,
+    TextInput = 1,// When hovering over InputText, etc.
+    ResizeAll = 2,// (Unused by imgui functions)
+    ResizeNS = 3,// When hovering over an horizontal border
+    ResizeEW = 4,// When hovering over a vertical border or a column
+    ResizeNESW = 5,// When hovering over the bottom-left corner of a window
+    ResizeNWSE = 6,// When hovering over the bottom-right corner of a window
+    Hand = 7,// (Unused by imgui functions. Use for e.g. hyperlinks)
+    NotAllowed = 8,// When hovering something with disallowed interaction. Usually a crossed circle.
     COUNT = 9
 }
 export { ImGuiCond as Cond };
 export declare enum ImGuiCond {
-    None = 0,
-    Always = 1,
-    Once = 2,
-    FirstUseEver = 4,
+    None = 0,// No condition (always set the variable), same as _Always
+    Always = 1,// Set the variable
+    Once = 2,// Set the variable once per runtime session (only the first call with succeed)
+    FirstUseEver = 4,// Set the variable if the window has no saved data (if doesn't exist in the .ini file)
     Appearing = 8
 }
 export { ImDrawFlags as DrawFlags };
 export declare enum ImDrawFlags {
     None = 0,
-    Closed = 1,
-    RoundCornersTopLeft = 16,
-    RoundCornersTopRight = 32,
-    RoundCornersBottomLeft = 64,
-    RoundCornersBottomRight = 128,
-    RoundCornersNone = 256,
+    Closed = 1,// PathStroke(), AddPolyline(): specify that shape should be closed (Important: this is always == 1 for legacy reason)
+    RoundCornersTopLeft = 16,// AddRect(), AddRectFilled(), PathRect(): enable rounding top-left corner only (when rounding > 0.0f, we default to all corners). Was 0x01.
+    RoundCornersTopRight = 32,// AddRect(), AddRectFilled(), PathRect(): enable rounding top-right corner only (when rounding > 0.0f, we default to all corners). Was 0x02.
+    RoundCornersBottomLeft = 64,// AddRect(), AddRectFilled(), PathRect(): enable rounding bottom-left corner only (when rounding > 0.0f, we default to all corners). Was 0x04.
+    RoundCornersBottomRight = 128,// AddRect(), AddRectFilled(), PathRect(): enable rounding bottom-right corner only (when rounding > 0.0f, we default to all corners). Wax 0x08.
+    RoundCornersNone = 256,// AddRect(), AddRectFilled(), PathRect(): disable rounding on all corners (when rounding > 0.0f). This is NOT zero, NOT an implicit flag!
     RoundCornersTop = 48,
     RoundCornersBottom = 192,
     RoundCornersLeft = 80,
     RoundCornersRight = 160,
     RoundCornersAll = 240,
-    RoundCornersDefault_ = 240,
+    RoundCornersDefault_ = 240,// Default to ALL corners if none of the _RoundCornersXX flags are specified.
     RoundCornersMask_ = 496
 }
 export { ImDrawListFlags as wListFlags };
 export declare enum ImDrawListFlags {
     None = 0,
     AntiAliasedLines = 1,
-    AntiAliasedLinesUseTex = 2,
-    AntiAliasedFill = 4,
+    AntiAliasedLinesUseTex = 2,// Enable anti-aliased lines/borders using textures when possible. Require backend to render with bilinear filtering.
+    AntiAliasedFill = 4,// Enable anti-aliased edge around filled shapes (rounded rectangles, circles).
     AllowVtxOffset = 8
 }
 export { ImU32 as U32 };
@@ -990,8 +990,8 @@ export declare class ImFontAtlasCustomRect {
 export { ImFontAtlasFlags as FontAtlasFlags };
 export declare enum ImFontAtlasFlags {
     None = 0,
-    NoPowerOfTwoHeight = 1,
-    NoMouseCursors = 2,
+    NoPowerOfTwoHeight = 1,// Don't round the height to next power of two
+    NoMouseCursors = 2,// Don't build software mouse cursors into the atlas
     NoBakedLines = 4
 }
 export { ImFontAtlas as FontAtlas };
@@ -1079,8 +1079,8 @@ export declare class ImFont {
 export { ImGuiViewportFlags as ViewportFlags };
 export declare enum ImGuiViewportFlags {
     None = 0,
-    IsPlatformWindow = 1,
-    IsPlatformMonitor = 2,
+    IsPlatformWindow = 1,// Represent a Platform Window
+    IsPlatformMonitor = 2,// Represent a Platform Monitor (unused yet)
     OwnedByApp = 4
 }
 export { ImGuiViewport as Viewport };

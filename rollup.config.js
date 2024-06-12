@@ -35,7 +35,7 @@ export default [
     ]
   },
   {
-    input: "example/src/imgui_impl.ts",
+    input: "game/src/imgui_impl.ts",
     output: {
       file: "dist/imgui_impl.umd.js",
       name: "ImGui_Impl",
@@ -47,13 +47,13 @@ export default [
     plugins: [
       typescript({
         clean: true,
-        tsconfig: "example/tsconfig.json",
+        tsconfig: "game/tsconfig.json",
         tsconfigOverride,
       }),
     ]
   },
   {
-    input: "example/src/imgui_demo.ts",
+    input: "game/src/imgui_demo.ts",
     output: {
       file: "dist/imgui_demo.umd.js",
       name: "ImGui_Demo",
@@ -65,13 +65,13 @@ export default [
     plugins: [
       typescript({
         clean: true,
-        tsconfig: "example/tsconfig.json",
+        tsconfig: "game/tsconfig.json",
         tsconfigOverride,
       }),
     ]
   },
   {
-    input: "example/src/imgui_memory_editor.ts",
+    input: "game/src/imgui_memory_editor.ts",
     output: {
       file: "dist/imgui_memory_editor.umd.js",
       name: "ImGui_Memory_Editor",
@@ -83,7 +83,7 @@ export default [
     plugins: [
       typescript({
         clean: true,
-        tsconfig: "example/tsconfig.json",
+        tsconfig: "game/tsconfig.json",
         tsconfigOverride,
       }),
     ]

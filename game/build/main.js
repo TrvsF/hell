@@ -9,7 +9,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
-    var ImGui, ImGui_Impl, imgui_demo_js_1, imgui_memory_editor_js_1, font, show_demo_window, show_another_window, clear_color, memory_editor, show_sandbox_window, show_gamepad_window, show_movie_window, f, counter, done, source, image_urls, image_url, image_element, image_gl_texture, video_urls, video_url, video_element, video_gl_texture, video_w, video_h, video_time_active, video_time, video_duration;
+    var ImGui, ImGui_Impl, imgui_demo_js_1, imgui_memory_editor_js_1, font, show_demo_window, show_another_window, background_colour, memory_editor, show_sandbox_window, show_gamepad_window, show_movie_window, f, counter, done, source, image_urls, image_url, image_element, image_gl_texture, video_urls, video_url, video_element, video_gl_texture, video_w, video_h, video_time_active, video_time, video_duration;
     var __moduleName = context_1 && context_1.id;
     function LoadArrayBuffer(url) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -38,8 +38,8 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
         });
     }
     exports_1("default", main);
-    function AddFontFromFileTTF(url, size_pixels, font_cfg = null, glyph_ranges = null) {
-        return __awaiter(this, void 0, void 0, function* () {
+    function AddFontFromFileTTF(url_1, size_pixels_1) {
+        return __awaiter(this, arguments, void 0, function* (url, size_pixels, font_cfg = null, glyph_ranges = null) {
             font_cfg = font_cfg || new ImGui.FontConfig();
             font_cfg.Name = font_cfg.Name || `${url.split(/[\\\/]/).pop()}, ${size_pixels.toFixed(0)}px`;
             return ImGui.GetIO().Fonts.AddFontFromMemoryTTF(yield LoadArrayBuffer(url), size_pixels, font_cfg, glyph_ranges);
@@ -114,19 +114,16 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
         ImGui.NewFrame();
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
         if (!done && show_demo_window) {
-            done = /*ImGui.*/ imgui_demo_js_1.ShowDemoWindow((value = show_demo_window) => show_demo_window = value);
+            done = imgui_demo_js_1.ShowDemoWindow((value = show_demo_window) => show_demo_window = value);
         }
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+        // default window
         {
-            // static float f = 0.0f;
-            // static int counter = 0;
-            ImGui.Begin("Hello, world!"); // Create a window called "Hello, world!" and append into it.
-            ImGui.Text("This is some useful text."); // Display some text (you can use a format strings too)
-            ImGui.Checkbox("Demo Window", (value = show_demo_window) => show_demo_window = value); // Edit bools storing our windows open/close state
-            ImGui.Checkbox("Another Window", (value = show_another_window) => show_another_window = value);
-            ImGui.SliderFloat("float", (value = f) => f = value, 0.0, 1.0); // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui.ColorEdit3("clear color", clear_color); // Edit 3 floats representing a color
-            if (ImGui.Button("Button")) // Buttons return true when clicked (NB: most widgets return true when edited/activated)
+            ImGui.Begin("hello, hell!");
+            ImGui.Text("weclome");
+            ImGui.Checkbox("demo", (value = show_demo_window) => show_demo_window = value);
+            ImGui.Checkbox("another", (value = show_another_window) => show_another_window = value);
+            ImGui.SliderFloat("float", (value = f) => f = value, 0.0, 1.0);
+            if (ImGui.Button("Button"))
                 counter++;
             ImGui.SameLine();
             ImGui.Text(`counter = ${counter}`);
@@ -198,14 +195,14 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
         const gl = ImGui_Impl.gl;
         if (gl) {
             gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-            gl.clearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+            gl.clearColor(background_colour.x, background_colour.y, background_colour.z, background_colour.w);
             gl.clear(gl.COLOR_BUFFER_BIT);
             //gl.useProgram(0); // You may want this if using this code in an OpenGL 3+ context where shaders may be bound
         }
         const ctx = ImGui_Impl.ctx;
         if (ctx) {
             // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.fillStyle = `rgba(${clear_color.x * 0xff}, ${clear_color.y * 0xff}, ${clear_color.z * 0xff}, ${clear_color.w})`;
+            ctx.fillStyle = `rgba(${background_colour.x * 0xff}, ${background_colour.y * 0xff}, ${background_colour.z * 0xff}, ${background_colour.w})`;
             ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         }
         UpdateVideo();
@@ -219,7 +216,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
             const gl = ImGui_Impl.gl;
             if (gl) {
                 gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-                gl.clearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+                gl.clearColor(background_colour.x, background_colour.y, background_colour.z, background_colour.w);
                 gl.clear(gl.COLOR_BUFFER_BIT);
             }
             const ctx = ImGui_Impl.ctx;
@@ -464,9 +461,9 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
         execute: function () {
             font = null;
             // Our state
-            show_demo_window = true;
+            show_demo_window = false;
             show_another_window = false;
-            clear_color = new ImGui.Vec4(0.45, 0.55, 0.60, 1.00);
+            background_colour = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
             memory_editor = new imgui_memory_editor_js_1.MemoryEditor();
             memory_editor.Open = false;
             show_sandbox_window = false;
