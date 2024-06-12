@@ -7,15 +7,10 @@ let font: ImGui.Font | null = null;
 
 // Our state
 let show_demo_window: boolean = false;
-let show_another_window: boolean = false;
 const background_colour: ImGui.Vec4 = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
 
 const memory_editor: MemoryEditor = new MemoryEditor();
 memory_editor.Open = false;
-
-let show_sandbox_window: boolean = false;
-let show_gamepad_window: boolean = false;
-let show_movie_window: boolean = false;
 
 /* static */ let f: number = 0.0;
 /* static */ let counter: number = 0;
@@ -116,89 +111,53 @@ function _loop(time: number): void {
     // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
     // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
     // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-
+    
     // Start the Dear ImGui frame
     ImGui_Impl.NewFrame(time);
     ImGui.NewFrame();
-
-    // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-    if (!done && show_demo_window) {
-        done = ShowDemoWindow((value = show_demo_window) => show_demo_window = value);
-    }
-
+    
     // default window
     {
-        ImGui.Begin("welcome to hell");
+        // -----------------------
+        // window title
+        ImGui.Begin("lasciate ogne speranza, voi ch'intrate");
+        ImGui.SetWindowSize(new ImGui.Vec2(380, 480), ImGui.Cond.Once);
 
-        ImGui.Text("weclome");
-        ImGui.Checkbox("demo", (value = show_demo_window) => show_demo_window = value);
-        ImGui.Checkbox("another", (value = show_another_window) => show_another_window = value);
+        // -----------------------
+        // text style
+        ImGui.PushTextWrapPos(ImGui.GetWindowWidth() - 2);
 
-        ImGui.SliderFloat("float", (value = f) => f = value, 0.0, 1.0);
-       
-        if (ImGui.Button("Button"))
-            counter++;
-        ImGui.SameLine();
-        ImGui.Text(`counter = ${counter}`);
+        // -----------------------
+        // preable
+        ImGui.Text("Hello, you are DEAD! Yes that's right this is what the afterlife looks like; now take your time, have a look around, get comfortable. It's gonna be a helluva journey.");
+        ImGui.Separator();
+        ImGui.Text("See that big button? You can press that to begin the processing sequence, whenever you are ready");
+        
+        // -----------------------
+        // button
+        ImGui.Button("Begin");
 
-        ImGui.Text(`Application average ${(1000.0 / ImGui.GetIO().Framerate).toFixed(3)} ms/frame (${ImGui.GetIO().Framerate.toFixed(1)} FPS)`);
+        // -----------------------
+        // footer
+        const WindowSize = ImGui.GetWindowSize();
+        const TextSize = ImGui.CalcTextSize("DUMMY");
+        const CursorY = WindowSize.y - TextSize.y - ImGui.GetStyle().WindowPadding.y;
+        ImGui.SetCursorPosY(CursorY);
 
-        ImGui.Checkbox("Memory Editor", (value = memory_editor.Open) => memory_editor.Open = value);
+        if (ImGui.Button("Memory Editor"))
+        {
+            memory_editor.Open = !memory_editor.Open;
+        }
         if (memory_editor.Open)
+        {
             memory_editor.DrawWindow("Memory Editor", ImGui.bind.HEAP8.buffer);
-        const mi: ImGui.Bind.mallinfo = ImGui.bind.mallinfo();
-        // ImGui.Text(`Total non-mmapped bytes (arena):       ${mi.arena}`);
-        // ImGui.Text(`# of free chunks (ordblks):            ${mi.ordblks}`);
-        // ImGui.Text(`# of free fastbin blocks (smblks):     ${mi.smblks}`);
-        // ImGui.Text(`# of mapped regions (hblks):           ${mi.hblks}`);
-        // ImGui.Text(`Bytes in mapped regions (hblkhd):      ${mi.hblkhd}`);
-        ImGui.Text(`Max. total allocated space (usmblks):  ${mi.usmblks}`);
-        // ImGui.Text(`Free bytes held in fastbins (fsmblks): ${mi.fsmblks}`);
-        ImGui.Text(`Total allocated space (uordblks):      ${mi.uordblks}`);
-        ImGui.Text(`Total free space (fordblks):           ${mi.fordblks}`);
-        // ImGui.Text(`Topmost releasable block (keepcost):   ${mi.keepcost}`);
-        if (ImGui.ImageButton(image_gl_texture, new ImGui.Vec2(48, 48))) {
-            // show_demo_window = !show_demo_window;
-            image_url = image_urls[(image_urls.indexOf(image_url) + 1) % image_urls.length];
-            if (image_element) {
-                image_element.src = image_url;
-            }
         }
-        if (ImGui.IsItemHovered()) {
-            ImGui.BeginTooltip();
-            ImGui.Text(image_url);
-            ImGui.EndTooltip();
-        }
-        if (ImGui.Button("Sandbox Window")) { show_sandbox_window = true; }
-        if (show_sandbox_window)
-            ShowSandboxWindow("Sandbox Window", (value = show_sandbox_window) => show_sandbox_window = value);
         ImGui.SameLine();
-        if (ImGui.Button("Gamepad Window")) { show_gamepad_window = true; }
-        if (show_gamepad_window)
-            ShowGamepadWindow("Gamepad Window", (value = show_gamepad_window) => show_gamepad_window = value);
-        ImGui.SameLine();
-        if (ImGui.Button("Movie Window")) { show_movie_window = true; }
-        if (show_movie_window)
-            ShowMovieWindow("Movie Window", (value = show_movie_window) => show_movie_window = value);
-
-        if (font) {
-            ImGui.PushFont(font);
-            ImGui.Text(`${font.GetDebugName()}`);
-            if (font.FindGlyphNoFallback(0x5929)) {
-                ImGui.Text(`U+5929: \u5929`);
-            }
-            ImGui.PopFont();
-        }
-
-        ImGui.End();
-    }
-
-    // 3. Show another simple window.
-    if (show_another_window) {
-        ImGui.Begin("Another Window", (value = show_another_window) => show_another_window = value, ImGui.WindowFlags.AlwaysAutoResize);
-        ImGui.Text("Hello from another window!");
-        if (ImGui.Button("Close Me"))
-            show_another_window = false;
+        ImGui.Text(`frametime : ${(1000.0 / ImGui.GetIO().Framerate).toFixed(1)}ms | powered by GOD systems`);
+        
+        // -----------------------
+        // end
+        ImGui.PopTextWrapPos();
         ImGui.End();
     }
 

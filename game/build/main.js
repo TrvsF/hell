@@ -1,4 +1,4 @@
-System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memory_editor.js"], function (exports_1, context_1) {
+System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], function (exports_1, context_1) {
     "use strict";
     var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
         function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -9,7 +9,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
-    var ImGui, ImGui_Impl, imgui_demo_js_1, imgui_memory_editor_js_1, font, show_demo_window, show_another_window, background_colour, memory_editor, show_sandbox_window, show_gamepad_window, show_movie_window, f, counter, done, source, image_urls, image_url, image_element, image_gl_texture, video_urls, video_url, video_element, video_gl_texture, video_w, video_h, video_time_active, video_time, video_duration;
+    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, font, show_demo_window, background_colour, memory_editor, f, counter, done, source, image_urls, image_url, image_element, image_gl_texture, video_urls, video_url, video_element, video_gl_texture, video_w, video_h, video_time_active, video_time, video_duration;
     var __moduleName = context_1 && context_1.id;
     function LoadArrayBuffer(url) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -112,81 +112,40 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
         // Start the Dear ImGui frame
         ImGui_Impl.NewFrame(time);
         ImGui.NewFrame();
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (!done && show_demo_window) {
-            done = imgui_demo_js_1.ShowDemoWindow((value = show_demo_window) => show_demo_window = value);
-        }
         // default window
         {
-            ImGui.Begin("hello, hell!");
-            ImGui.Text("weclome");
-            ImGui.Checkbox("demo", (value = show_demo_window) => show_demo_window = value);
-            ImGui.Checkbox("another", (value = show_another_window) => show_another_window = value);
-            ImGui.SliderFloat("float", (value = f) => f = value, 0.0, 1.0);
-            if (ImGui.Button("Button"))
-                counter++;
-            ImGui.SameLine();
-            ImGui.Text(`counter = ${counter}`);
-            ImGui.Text(`Application average ${(1000.0 / ImGui.GetIO().Framerate).toFixed(3)} ms/frame (${ImGui.GetIO().Framerate.toFixed(1)} FPS)`);
-            ImGui.Checkbox("Memory Editor", (value = memory_editor.Open) => memory_editor.Open = value);
-            if (memory_editor.Open)
+            // -----------------------
+            // window title
+            ImGui.Begin("lasciate ogne speranza, voi ch'intrate");
+            ImGui.SetWindowSize(new ImGui.Vec2(380, 480), ImGui.Cond.Once);
+            // -----------------------
+            // text style
+            ImGui.PushTextWrapPos(ImGui.GetWindowWidth() - 2);
+            // -----------------------
+            // preable
+            ImGui.Text("Hello, you are DEAD! Yes that's right this is what the afterlife looks like; now take your time, have a look around, get comfortable. It's gonna be a helluva journey.");
+            ImGui.Separator();
+            ImGui.Text("See that big button? You can press that to begin the processing sequence, whenever you are ready");
+            // -----------------------
+            // button
+            ImGui.Button("Begin");
+            // -----------------------
+            // footer
+            const WindowSize = ImGui.GetWindowSize();
+            const TextSize = ImGui.CalcTextSize("DUMMY");
+            const CursorY = WindowSize.y - TextSize.y - ImGui.GetStyle().WindowPadding.y;
+            ImGui.SetCursorPosY(CursorY);
+            if (ImGui.Button("Memory Editor")) {
+                memory_editor.Open = !memory_editor.Open;
+            }
+            if (memory_editor.Open) {
                 memory_editor.DrawWindow("Memory Editor", ImGui.bind.HEAP8.buffer);
-            const mi = ImGui.bind.mallinfo();
-            // ImGui.Text(`Total non-mmapped bytes (arena):       ${mi.arena}`);
-            // ImGui.Text(`# of free chunks (ordblks):            ${mi.ordblks}`);
-            // ImGui.Text(`# of free fastbin blocks (smblks):     ${mi.smblks}`);
-            // ImGui.Text(`# of mapped regions (hblks):           ${mi.hblks}`);
-            // ImGui.Text(`Bytes in mapped regions (hblkhd):      ${mi.hblkhd}`);
-            ImGui.Text(`Max. total allocated space (usmblks):  ${mi.usmblks}`);
-            // ImGui.Text(`Free bytes held in fastbins (fsmblks): ${mi.fsmblks}`);
-            ImGui.Text(`Total allocated space (uordblks):      ${mi.uordblks}`);
-            ImGui.Text(`Total free space (fordblks):           ${mi.fordblks}`);
-            // ImGui.Text(`Topmost releasable block (keepcost):   ${mi.keepcost}`);
-            if (ImGui.ImageButton(image_gl_texture, new ImGui.Vec2(48, 48))) {
-                // show_demo_window = !show_demo_window;
-                image_url = image_urls[(image_urls.indexOf(image_url) + 1) % image_urls.length];
-                if (image_element) {
-                    image_element.src = image_url;
-                }
             }
-            if (ImGui.IsItemHovered()) {
-                ImGui.BeginTooltip();
-                ImGui.Text(image_url);
-                ImGui.EndTooltip();
-            }
-            if (ImGui.Button("Sandbox Window")) {
-                show_sandbox_window = true;
-            }
-            if (show_sandbox_window)
-                ShowSandboxWindow("Sandbox Window", (value = show_sandbox_window) => show_sandbox_window = value);
             ImGui.SameLine();
-            if (ImGui.Button("Gamepad Window")) {
-                show_gamepad_window = true;
-            }
-            if (show_gamepad_window)
-                ShowGamepadWindow("Gamepad Window", (value = show_gamepad_window) => show_gamepad_window = value);
-            ImGui.SameLine();
-            if (ImGui.Button("Movie Window")) {
-                show_movie_window = true;
-            }
-            if (show_movie_window)
-                ShowMovieWindow("Movie Window", (value = show_movie_window) => show_movie_window = value);
-            if (font) {
-                ImGui.PushFont(font);
-                ImGui.Text(`${font.GetDebugName()}`);
-                if (font.FindGlyphNoFallback(0x5929)) {
-                    ImGui.Text(`U+5929: \u5929`);
-                }
-                ImGui.PopFont();
-            }
-            ImGui.End();
-        }
-        // 3. Show another simple window.
-        if (show_another_window) {
-            ImGui.Begin("Another Window", (value = show_another_window) => show_another_window = value, ImGui.WindowFlags.AlwaysAutoResize);
-            ImGui.Text("Hello from another window!");
-            if (ImGui.Button("Close Me"))
-                show_another_window = false;
+            ImGui.Text(`frametime : ${(1000.0 / ImGui.GetIO().Framerate).toFixed(1)}ms | powered by GOD systems`);
+            // -----------------------
+            // end
+            ImGui.PopTextWrapPos();
             ImGui.End();
         }
         ImGui.EndFrame();
@@ -451,9 +410,6 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
             function (ImGui_Impl_1) {
                 ImGui_Impl = ImGui_Impl_1;
             },
-            function (imgui_demo_js_1_1) {
-                imgui_demo_js_1 = imgui_demo_js_1_1;
-            },
             function (imgui_memory_editor_js_1_1) {
                 imgui_memory_editor_js_1 = imgui_memory_editor_js_1_1;
             }
@@ -462,13 +418,9 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_demo.js", "./imgui_memo
             font = null;
             // Our state
             show_demo_window = false;
-            show_another_window = false;
             background_colour = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
             memory_editor = new imgui_memory_editor_js_1.MemoryEditor();
             memory_editor.Open = false;
-            show_sandbox_window = false;
-            show_gamepad_window = false;
-            show_movie_window = false;
             /* static */ f = 0.0;
             /* static */ counter = 0;
             done = false;
