@@ -120,8 +120,9 @@ function _loop(time: number): void {
     {
         // -----------------------
         // window title
-        ImGui.Begin("lasciate ogne speranza, voi ch'intrate");
-        ImGui.SetWindowSize(new ImGui.Vec2(380, 480), ImGui.Cond.Once);
+        const WindowFlags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoCollapse;
+        ImGui.Begin("lasciate ogne speranza, voi ch'intrate", null, WindowFlags);
+        ImGui.SetWindowSize(new ImGui.Vec2(440, 500), ImGui.Cond.Once);
 
         // -----------------------
         // text style
@@ -129,21 +130,23 @@ function _loop(time: number): void {
 
         // -----------------------
         // preable
-        ImGui.Text("Hello, you are DEAD! Yes that's right this is what the afterlife looks like; now take your time, have a look around, get comfortable. It's gonna be a helluva journey.");
-        ImGui.Separator();
-        ImGui.Text("See that big button? You can press that to begin the processing sequence, whenever you are ready");
-        
+        ImGui.Text("Hello, you are DEAD! Yes that's right this is what the afterlife looks like; now take your time, have a look around, get comfortable. It's gonna be a helluva journey. Within this package lies your soul, this carries your pathoftime or 'memories', we will need you to interact with these memories in order for them to pass on. Though please there's certainly no rush. ");
+
         // -----------------------
         // button
+        ImGui.Separator();
+        ImGui.Text("Pressing the below button will begin the passing stage.");
         ImGui.Button("Begin");
 
         // -----------------------
         // footer
         const WindowSize = ImGui.GetWindowSize();
         const TextSize = ImGui.CalcTextSize("DUMMY");
-        const CursorY = WindowSize.y - TextSize.y - ImGui.GetStyle().WindowPadding.y;
+        const CursorY = WindowSize.y - TextSize.y - ImGui.GetStyle().WindowPadding.y - 2.0;
         ImGui.SetCursorPosY(CursorY);
 
+        ImGui.Text(`frametime : ${(1000.0 / ImGui.GetIO().Framerate).toFixed(1)}ms | powered by GOD systems    `);
+        ImGui.SameLine();
         if (ImGui.Button("Memory Editor"))
         {
             memory_editor.Open = !memory_editor.Open;
@@ -152,8 +155,6 @@ function _loop(time: number): void {
         {
             memory_editor.DrawWindow("Memory Editor", ImGui.bind.HEAP8.buffer);
         }
-        ImGui.SameLine();
-        ImGui.Text(`frametime : ${(1000.0 / ImGui.GetIO().Framerate).toFixed(1)}ms | powered by GOD systems`);
         
         // -----------------------
         // end
