@@ -6,9 +6,9 @@ import { MemoryEditor } from "./imgui_memory_editor.js";
 let font: ImGui.Font | null = null;
 
 // Our state
-let show_demo_window: boolean = true;
+let show_demo_window: boolean = false;
 let show_another_window: boolean = false;
-const clear_color: ImGui.Vec4 = new ImGui.Vec4(0.45, 0.55, 0.60, 1.00);
+const background_colour: ImGui.Vec4 = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
 
 const memory_editor: MemoryEditor = new MemoryEditor();
 memory_editor.Open = false;
@@ -123,24 +123,20 @@ function _loop(time: number): void {
 
     // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
     if (!done && show_demo_window) {
-        done = /*ImGui.*/ShowDemoWindow((value = show_demo_window) => show_demo_window = value);
+        done = ShowDemoWindow((value = show_demo_window) => show_demo_window = value);
     }
 
-    // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
+    // default window
     {
-        // static float f = 0.0f;
-        // static int counter = 0;
+        ImGui.Begin("hello, hell!");
 
-        ImGui.Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+        ImGui.Text("weclome");
+        ImGui.Checkbox("demo", (value = show_demo_window) => show_demo_window = value);
+        ImGui.Checkbox("another", (value = show_another_window) => show_another_window = value);
 
-        ImGui.Text("This is some useful text.");               // Display some text (you can use a format strings too)
-        ImGui.Checkbox("Demo Window", (value = show_demo_window) => show_demo_window = value);      // Edit bools storing our windows open/close state
-        ImGui.Checkbox("Another Window", (value = show_another_window) => show_another_window = value);
-
-        ImGui.SliderFloat("float", (value = f) => f = value, 0.0, 1.0);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui.ColorEdit3("clear color", clear_color); // Edit 3 floats representing a color
-
-        if (ImGui.Button("Button"))                            // Buttons return true when clicked (NB: most widgets return true when edited/activated)
+        ImGui.SliderFloat("float", (value = f) => f = value, 0.0, 1.0);
+       
+        if (ImGui.Button("Button"))
             counter++;
         ImGui.SameLine();
         ImGui.Text(`counter = ${counter}`);
@@ -213,7 +209,7 @@ function _loop(time: number): void {
     const gl: WebGLRenderingContext | null = ImGui_Impl.gl;
     if (gl) {
         gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-        gl.clearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        gl.clearColor(background_colour.x, background_colour.y, background_colour.z, background_colour.w);
         gl.clear(gl.COLOR_BUFFER_BIT);
         //gl.useProgram(0); // You may want this if using this code in an OpenGL 3+ context where shaders may be bound
     }
@@ -221,7 +217,7 @@ function _loop(time: number): void {
     const ctx: CanvasRenderingContext2D | null = ImGui_Impl.ctx;
     if (ctx) {
         // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.fillStyle = `rgba(${clear_color.x * 0xff}, ${clear_color.y * 0xff}, ${clear_color.z * 0xff}, ${clear_color.w})`;
+        ctx.fillStyle = `rgba(${background_colour.x * 0xff}, ${background_colour.y * 0xff}, ${background_colour.z * 0xff}, ${background_colour.w})`;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
 
@@ -238,7 +234,7 @@ async function _done(): Promise<void> {
     const gl: WebGLRenderingContext | null = ImGui_Impl.gl;
     if (gl) {
         gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-        gl.clearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
+        gl.clearColor(background_colour.x, background_colour.y, background_colour.z, background_colour.w);
         gl.clear(gl.COLOR_BUFFER_BIT);
     }
 
