@@ -1,6 +1,6 @@
 System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], function (exports_1, context_1) {
     "use strict";
-    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, six_windows, font, is_initalised, background_colour, memory_editor, source, image_urls, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h, video_time_active, video_time, video_duration;
+    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, six_windows, font, is_initalised, has_game_started, background_colour, memory_editor, image_urls, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h;
     var __moduleName = context_1 && context_1.id;
     async function LoadArrayBuffer(url) {
         const response = await fetch(url);
@@ -109,7 +109,14 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             // button
             ImGui.Separator();
             ImGui.Text("Pressing the below button will begin the passing stage.");
-            ImGui.Button("Begin");
+            if (!has_game_started) {
+                if (ImGui.Button("Begin")) {
+                    six_windows.forEach(window => {
+                        window.window_isactive = true;
+                    });
+                    has_game_started = true;
+                }
+            }
             // -----------------------
             // footer
             const memory_string = "Memory Editor";
@@ -134,9 +141,9 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         ImGui.EndFrame();
         // -----------------------
         // 6 hell windows
-        six_windows.forEach(([window_isactive, window_id]) => {
-            if (window_isactive) {
-                switch (window_id) {
+        six_windows.forEach(window => {
+            if (window.window_isactive) {
+                switch (window.window_id) {
                     case "skibidi":
                         ShowSkibidiWindow();
                         break;
@@ -201,9 +208,25 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         console.log("Total allocated space (uordblks) @ _done:", ImGui.bind.mallinfo().uordblks);
     }
     function ShowSkibidiWindow() {
-        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.AlwaysAutoResize;
         ImGui.Begin("skibidi", null, window_flags);
-        ImGui.Text("");
+        if (video_element !== null) {
+            if (ImGui.ImageButton(video_gl_texture, new ImGui.Vec2(video_w, video_h))) {
+                if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
+                    video_element.paused ? video_element.play() : video_element.pause();
+                }
+            }
+            ImGui.BeginGroup();
+            if (ImGui.Button(video_element.paused ? "Play" : "Stop")) {
+                if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
+                    video_element.paused ? video_element.play() : video_element.pause();
+                }
+            }
+            ImGui.EndGroup();
+        }
+        else {
+            ImGui.Text("No Video Element");
+        }
         ImGui.End();
     }
     function ShowLimboWindow() {
@@ -234,66 +257,6 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
     function ShowHeavenWindow() {
         const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
         ImGui.Begin("heaven", null, window_flags);
-        ImGui.End();
-    }
-    function ShowHelpMarker(desc) {
-        ImGui.TextDisabled("(?)");
-        if (ImGui.IsItemHovered()) {
-            ImGui.BeginTooltip();
-            ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0);
-            ImGui.TextUnformatted(desc);
-            ImGui.PopTextWrapPos();
-            ImGui.EndTooltip();
-        }
-    }
-    function ShowSandboxWindow(title, p_open = null) {
-        ImGui.SetNextWindowSize(new ImGui.Vec2(320, 240), ImGui.Cond.FirstUseEver);
-        ImGui.Begin(title, p_open);
-        ImGui.Text("Source");
-        ImGui.SameLine();
-        ShowHelpMarker("Contents evaluated and appended to the window.");
-        ImGui.PushItemWidth(-1);
-        ImGui.InputTextMultiline("##source", (_ = source) => (source = _), 1024, ImGui.Vec2.ZERO, ImGui.InputTextFlags.AllowTabInput);
-        ImGui.PopItemWidth();
-        try {
-            eval(source);
-        }
-        catch (e) {
-            ImGui.TextColored(new ImGui.Vec4(1.0, 0.0, 0.0, 1.0), "error: ");
-            ImGui.SameLine();
-            ImGui.Text(e.message);
-        }
-        ImGui.End();
-    }
-    function ShowGamepadWindow(title, p_open = null) {
-        ImGui.Begin(title, p_open, ImGui.WindowFlags.AlwaysAutoResize);
-        const gamepads = (typeof (navigator) !== "undefined" && typeof (navigator.getGamepads) === "function") ? navigator.getGamepads() : [];
-        if (gamepads.length > 0) {
-            for (let i = 0; i < gamepads.length; ++i) {
-                const gamepad = gamepads[i];
-                ImGui.Text(`gamepad ${i} ${gamepad && gamepad.id}`);
-                if (!gamepad) {
-                    continue;
-                }
-                ImGui.Text(`       `);
-                for (let button = 0; button < gamepad.buttons.length; ++button) {
-                    ImGui.SameLine();
-                    ImGui.Text(`${button.toString(16)}`);
-                }
-                ImGui.Text(`buttons`);
-                for (let button = 0; button < gamepad.buttons.length; ++button) {
-                    ImGui.SameLine();
-                    ImGui.Text(`${gamepad.buttons[button].value}`);
-                }
-                ImGui.Text(`axes`);
-                for (let axis = 0; axis < gamepad.axes.length; ++axis) {
-                    ImGui.Text(`${axis}: ${gamepad.axes[axis].toFixed(2)}`);
-                }
-            }
-        }
-        else {
-            ImGui.Text("connect a gamepad");
-        }
         ImGui.End();
     }
     function StartUpImage() {
@@ -390,55 +353,6 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
     }
     function ShowMovieWindow(title, p_open = null) {
         ImGui.Begin(title, p_open, ImGui.WindowFlags.AlwaysAutoResize);
-        if (video_element !== null) {
-            if (p_open && !p_open()) {
-                video_element.pause();
-            }
-            const w = video_element.videoWidth;
-            const h = video_element.videoHeight;
-            if (w > 0) {
-                video_w = w;
-            }
-            if (h > 0) {
-                video_h = h;
-            }
-            ImGui.BeginGroup();
-            ImGui.SameLine();
-            ImGui.PushItemWidth(video_w - 20);
-            if (ImGui.InputText("##url", (value = video_url) => video_url = value)) {
-                console.log(video_url);
-                video_element.src = video_url;
-            }
-            ImGui.PopItemWidth();
-            ImGui.EndGroup();
-            if (ImGui.ImageButton(video_gl_texture, new ImGui.Vec2(video_w, video_h))) {
-                if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
-                    video_element.paused ? video_element.play() : video_element.pause();
-                }
-            }
-            ImGui.BeginGroup();
-            if (ImGui.Button(video_element.paused ? "Play" : "Stop")) {
-                if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
-                    video_element.paused ? video_element.play() : video_element.pause();
-                }
-            }
-            ImGui.SameLine();
-            if (!video_time_active) {
-                video_time = video_element.currentTime;
-                video_duration = video_element.duration || 0;
-            }
-            ImGui.SliderFloat("##time", (value = video_time) => video_time = value, 0, video_duration);
-            const video_time_was_active = video_time_active;
-            video_time_active = ImGui.IsItemActive();
-            if (!video_time_active && video_time_was_active) {
-                video_element.currentTime = video_time;
-            }
-            ImGui.EndGroup();
-        }
-        else {
-            ImGui.Text("No Video Element");
-        }
-        ImGui.End();
     }
     return {
         setters: [
@@ -454,25 +368,19 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         ],
         execute: function () {
             six_windows = [
-                [true, "skibidi"],
-                [true, "limbo"],
-                [true, "greed"],
-                [true, "anger"],
-                [true, "waste"],
-                [true, "lust"],
+                { window_isactive: false, window_id: "skibidi" },
+                { window_isactive: false, window_id: "limbo" },
+                { window_isactive: false, window_id: "greed" },
+                { window_isactive: false, window_id: "anger" },
+                { window_isactive: false, window_id: "waste" },
+                { window_isactive: false, window_id: "lust" }
             ];
             font = null;
             is_initalised = false;
+            has_game_started = false;
             background_colour = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
             memory_editor = new imgui_memory_editor_js_1.MemoryEditor();
             memory_editor.Open = false;
-            source = [
-                "ImGui.Text(\"Hello, world!\");",
-                "ImGui.SliderFloat(\"float\",",
-                "\t(value = f) => f = value,",
-                "\t0.0, 1.0);",
-                "",
-            ].join("\n");
             image_urls = [
                 "https://threejs.org/examples/textures/crate.gif",
                 "https://threejs.org/examples/textures/sprite.png",
@@ -481,14 +389,11 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             image_url = image_urls[0];
             image_element = null;
             image_gl_texture = null;
-            video_url = "https://github.com/TrvsF/hell/tree/main/game/assets/skibidi.mp4";
+            video_url = "assets/skibidi.mp4";
             video_element = null;
             video_gl_texture = null;
-            video_w = 640;
-            video_h = 360;
-            video_time_active = false;
-            video_time = 0;
-            video_duration = 0;
+            video_w = 280;
+            video_h = 480;
         }
     };
 });

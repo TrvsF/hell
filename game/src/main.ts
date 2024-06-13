@@ -90,19 +90,23 @@ async function _init(): Promise<void> {
     }
 }
 
-type Window = [boolean, string];
+type Window = {
+    window_isactive: boolean;
+    window_id: string;
+};
 
 const six_windows: Window[] = [
-    [true, "skibidi"],
-    [true, "limbo"],
-    [true, "greed"],
-    [true, "anger"],
-    [true, "waste"],
-    [true, "lust"],
+    { window_isactive: false, window_id: "skibidi" },
+    { window_isactive: false, window_id: "limbo" },
+    { window_isactive: false, window_id: "greed" },
+    { window_isactive: false, window_id: "anger" },
+    { window_isactive: false, window_id: "waste" },
+    { window_isactive: false, window_id: "lust" }
 ];
 
 let font: ImGui.Font | null = null;
 let is_initalised: boolean = false;
+let has_game_started: boolean = false;
 
 let background_colour: ImGui.Vec4 = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
 
@@ -138,8 +142,15 @@ function _loop(time: number): void {
         // button
         ImGui.Separator();
         ImGui.Text("Pressing the below button will begin the passing stage.");
-        ImGui.Button("Begin");
-        
+        if (!has_game_started) {
+            if (ImGui.Button("Begin")) {
+                six_windows.forEach(window => {
+                    window.window_isactive = true;
+                });
+                has_game_started = true;
+            }
+        }
+       
         // -----------------------
         // footer
         const memory_string = "Memory Editor"; 
@@ -169,9 +180,9 @@ function _loop(time: number): void {
 
     // -----------------------
     // 6 hell windows
-    six_windows.forEach(([window_isactive, window_id]) => {
-        if (window_isactive) {
-            switch(window_id)
+    six_windows.forEach(window => {
+        if (window.window_isactive) {
+            switch(window.window_id)
             {
                 case "skibidi":
                     ShowSkibidiWindow();
@@ -248,12 +259,27 @@ async function _done(): Promise<void> {
 }
 
 function ShowSkibidiWindow(): void {
-    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.AlwaysAutoResize;
     ImGui.Begin("skibidi", null, window_flags);
     
-    ImGui.Text("")
-    ShowMovieWindow("sk");
-    
+    if (video_element !== null) {        
+        if (ImGui.ImageButton(video_gl_texture, new ImGui.Vec2(video_w, video_h))) {
+            if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
+                video_element.paused ? video_element.play() : video_element.pause();
+            }
+        }
+
+        ImGui.BeginGroup();
+        if (ImGui.Button(video_element.paused ? "Play" : "Stop")) {
+            if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
+                video_element.paused ? video_element.play() : video_element.pause();
+            }
+        }
+        ImGui.EndGroup();
+    } else {
+        ImGui.Text("No Video Element");
+    }
+
     ImGui.End();
 }
 
@@ -308,70 +334,6 @@ function ShowHeavenWindow(): void {
     
     
     
-    ImGui.End();
-}
-
-function ShowHelpMarker(desc: string): void {
-    ImGui.TextDisabled("(?)");
-    if (ImGui.IsItemHovered()) {
-        ImGui.BeginTooltip();
-        ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0);
-        ImGui.TextUnformatted(desc);
-        ImGui.PopTextWrapPos();
-        ImGui.EndTooltip();
-    }
-}
-
-let source: string = [
-    "ImGui.Text(\"Hello, world!\");",
-    "ImGui.SliderFloat(\"float\",",
-    "\t(value = f) => f = value,",
-    "\t0.0, 1.0);",
-    "",
-].join("\n");
-
-function ShowSandboxWindow(title: string, p_open: ImGui.Access<boolean> | null = null): void {
-    ImGui.SetNextWindowSize(new ImGui.Vec2(320, 240), ImGui.Cond.FirstUseEver);
-    ImGui.Begin(title, p_open);
-    ImGui.Text("Source");
-    ImGui.SameLine(); ShowHelpMarker("Contents evaluated and appended to the window.");
-    ImGui.PushItemWidth(-1);
-    ImGui.InputTextMultiline("##source", (_ = source) => (source = _), 1024, ImGui.Vec2.ZERO, ImGui.InputTextFlags.AllowTabInput);
-    ImGui.PopItemWidth();
-    try {
-        eval(source);
-    } catch (e: any) {
-        ImGui.TextColored(new ImGui.Vec4(1.0, 0.0, 0.0, 1.0), "error: ");
-        ImGui.SameLine();
-        ImGui.Text(e.message);
-    }
-    ImGui.End();
-}
-
-function ShowGamepadWindow(title: string, p_open: ImGui.Access<boolean> | null = null): void {
-    ImGui.Begin(title, p_open, ImGui.WindowFlags.AlwaysAutoResize);
-    const gamepads: (Gamepad | null)[] = (typeof(navigator) !== "undefined" && typeof(navigator.getGamepads) === "function") ? navigator.getGamepads() : [];
-    if (gamepads.length > 0) {
-        for (let i = 0; i < gamepads.length; ++i) {
-            const gamepad: Gamepad | null = gamepads[i];
-            ImGui.Text(`gamepad ${i} ${gamepad && gamepad.id}`);
-            if (!gamepad) { continue; }
-            ImGui.Text(`       `);
-            for (let button = 0; button < gamepad.buttons.length; ++button) {
-                ImGui.SameLine(); ImGui.Text(`${button.toString(16)}`);
-            }
-            ImGui.Text(`buttons`);
-            for (let button = 0; button < gamepad.buttons.length; ++button) {
-                ImGui.SameLine(); ImGui.Text(`${gamepad.buttons[button].value}`);
-            }
-            ImGui.Text(`axes`);
-            for (let axis = 0; axis < gamepad.axes.length; ++axis) {
-                ImGui.Text(`${axis}: ${gamepad.axes[axis].toFixed(2)}`);
-            }
-        }
-    } else {
-        ImGui.Text("connect a gamepad");
-    }
     ImGui.End();
 }
 
@@ -434,14 +396,11 @@ function CleanUpImage(): void {
     image_element = null;
 }
 
-let video_url: string = "https://github.com/TrvsF/hell/tree/main/game/assets/skibidi.mp4";
+let video_url: string = "assets/skibidi.mp4";
 let video_element: HTMLVideoElement | null = null;
 let video_gl_texture: WebGLTexture | null = null;
-let video_w: number = 640;
-let video_h: number = 360;
-let video_time_active: boolean = false;
-let video_time: number = 0;
-let video_duration: number = 0;
+let video_w: number = 280;
+let video_h: number = 480;
 
 // --------------------------------------
 // TODO : REFACTOR so we can have many videos playing at the same time!!
@@ -499,51 +458,5 @@ function UpdateVideo(): void {
 
 function ShowMovieWindow(title: string, p_open: ImGui.Access<boolean> | null = null): void {
     ImGui.Begin(title, p_open, ImGui.WindowFlags.AlwaysAutoResize);
-    if (video_element !== null) {
-        if (p_open && !p_open()) {
-            video_element.pause();
-        }
-        const w: number = video_element.videoWidth;
-        const h: number = video_element.videoHeight;
-        if (w > 0) { video_w = w; }
-        if (h > 0) { video_h = h; }
-
-        ImGui.BeginGroup();
-        ImGui.SameLine();
-        ImGui.PushItemWidth(video_w - 20);
-        if (ImGui.InputText("##url", (value = video_url) => video_url = value)) {
-            console.log(video_url);
-            video_element.src = video_url;
-        }
-        ImGui.PopItemWidth();
-        ImGui.EndGroup();
-
-        if (ImGui.ImageButton(video_gl_texture, new ImGui.Vec2(video_w, video_h))) {
-            if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
-                video_element.paused ? video_element.play() : video_element.pause();
-            }
-        }
-
-        ImGui.BeginGroup();
-        if (ImGui.Button(video_element.paused ? "Play" : "Stop")) {
-            if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
-                video_element.paused ? video_element.play() : video_element.pause();
-            }
-        }
-        ImGui.SameLine();
-        if (!video_time_active) {
-            video_time = video_element.currentTime;
-            video_duration = video_element.duration || 0;
-        }
-        ImGui.SliderFloat("##time", (value = video_time) => video_time = value, 0, video_duration);
-        const video_time_was_active: boolean = video_time_active;
-        video_time_active = ImGui.IsItemActive();
-        if (!video_time_active && video_time_was_active) {
-            video_element.currentTime = video_time;
-        }
-        ImGui.EndGroup();
-    } else {
-        ImGui.Text("No Video Element");
-    }
-    ImGui.End();
+    
 }
