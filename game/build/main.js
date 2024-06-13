@@ -210,19 +210,13 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
     function ShowSkibidiWindow() {
         const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.AlwaysAutoResize;
         ImGui.Begin("skibidi", null, window_flags);
+        console.log(video_element);
         if (video_element !== null) {
-            if (ImGui.ImageButton(video_gl_texture, new ImGui.Vec2(video_w, video_h))) {
-                if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
-                    video_element.paused ? video_element.play() : video_element.pause();
-                }
+            if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
+                ImGui.ImageButton(video_gl_texture, new ImGui.Vec2(video_w, video_h));
+                video_element.play();
+                console.log(video_element);
             }
-            ImGui.BeginGroup();
-            if (ImGui.Button(video_element.paused ? "Play" : "Stop")) {
-                if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
-                    video_element.paused ? video_element.play() : video_element.pause();
-                }
-            }
-            ImGui.EndGroup();
         }
         else {
             ImGui.Text("No Video Element");
