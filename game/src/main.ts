@@ -252,6 +252,7 @@ function ShowSkibidiWindow(): void {
     ImGui.Begin("skibidi", null, window_flags);
     
     ImGui.Text("")
+    ShowMovieWindow("sk");
     
     ImGui.End();
 }
