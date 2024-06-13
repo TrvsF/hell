@@ -9,7 +9,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
     };
-    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, font, show_demo_window, background_colour, memory_editor, f, counter, done, source, image_urls, image_url, image_element, image_gl_texture, video_urls, video_url, video_element, video_gl_texture, video_w, video_h, video_time_active, video_time, video_duration;
+    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, six_windows, font, is_initalised, background_colour, memory_editor, source, image_urls, image_url, image_element, image_gl_texture, video_urls, video_url, video_element, video_gl_texture, video_w, video_h, video_time_active, video_time, video_duration;
     var __moduleName = context_1 && context_1.id;
     function LoadArrayBuffer(url) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -102,26 +102,25 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             }
         });
     }
-    // Main loop
+    // Poll and handle events (inputs, window resize, etc.)
+    // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
+    // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
+    // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
+    // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
     function _loop(time) {
-        // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-        // Start the Dear ImGui frame
-        ImGui_Impl.NewFrame(time);
-        ImGui.NewFrame();
+        // -----------------------
         // default window
+        ImGui.NewFrame();
         {
             // -----------------------
             // window title
-            const WindowFlags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoCollapse;
-            ImGui.Begin("lasciate ogne speranza, voi ch'intrate", null, WindowFlags);
+            const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoCollapse;
+            ImGui.Begin("lasciate ogne speranza, voi ch'intrate", null, window_flags);
             ImGui.SetWindowSize(new ImGui.Vec2(440, 500), ImGui.Cond.Once);
+            const window_size = ImGui.GetWindowSize();
             // -----------------------
             // text style
-            ImGui.PushTextWrapPos(ImGui.GetWindowWidth() - 2);
+            ImGui.PushTextWrapPos(ImGui.GetWindowWidth() - 2.0);
             // -----------------------
             // preable
             ImGui.Text("Hello, you are DEAD! Yes that's right this is what the afterlife looks like; now take your time, have a look around, get comfortable. It's gonna be a helluva journey. Within this package lies your soul, this carries your pathoftime or 'memories', we will need you to interact with these memories in order for them to pass on. Though please there's certainly no rush. ");
@@ -132,17 +131,19 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             ImGui.Button("Begin");
             // -----------------------
             // footer
-            const WindowSize = ImGui.GetWindowSize();
-            const TextSize = ImGui.CalcTextSize("DUMMY");
-            const CursorY = WindowSize.y - TextSize.y - ImGui.GetStyle().WindowPadding.y - 2.0;
-            ImGui.SetCursorPosY(CursorY);
-            ImGui.Text(`frametime : ${(1000.0 / ImGui.GetIO().Framerate).toFixed(1)}ms | powered by GOD systems    `);
+            const memory_string = "Memory Editor";
+            const text_size = ImGui.CalcTextSize(memory_string);
+            const cursor_y = window_size.y - text_size.y - ImGui.GetStyle().WindowPadding.y - 2.0;
+            ImGui.SetCursorPosY(cursor_y);
+            ImGui.Text(`frametime : ${(1000.0 / ImGui.GetIO().Framerate).toFixed(1)}ms | powered by GOD systems`);
             ImGui.SameLine();
-            if (ImGui.Button("Memory Editor")) {
+            const curosr_x = window_size.x - text_size.x - 10.0;
+            ImGui.SetCursorPosX(curosr_x);
+            if (ImGui.Button(memory_string)) {
                 memory_editor.Open = !memory_editor.Open;
             }
             if (memory_editor.Open) {
-                memory_editor.DrawWindow("Memory Editor", ImGui.bind.HEAP8.buffer);
+                memory_editor.DrawWindow(memory_string, ImGui.bind.HEAP8.buffer);
             }
             // -----------------------
             // end
@@ -150,7 +151,35 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             ImGui.End();
         }
         ImGui.EndFrame();
+        // -----------------------
+        // 6 hell windows
+        six_windows.forEach(([window_isactive, window_id]) => {
+            if (window_isactive) {
+                switch (window_id) {
+                    case "skibidi":
+                        ShowSkibidiWindow();
+                        break;
+                    case "limbo":
+                        ShowLimboWindow();
+                        break;
+                    case "greed":
+                        ShowGreedWindow();
+                        break;
+                    case "anger":
+                        ShowAngerWindow();
+                        break;
+                    case "waste":
+                        ShowWasteWindow();
+                        break;
+                    case "lust":
+                        ShowLustWindow();
+                        break;
+                }
+            }
+        });
+        // -----------------------
         // Rendering
+        ImGui_Impl.NewFrame(time);
         ImGui.Render();
         const gl = ImGui_Impl.gl;
         if (gl) {
@@ -167,8 +196,9 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         }
         UpdateVideo();
         ImGui_Impl.RenderDrawData(ImGui.GetDrawData());
+        // ??
         if (typeof (window) !== "undefined") {
-            window.requestAnimationFrame(done ? _done : _loop);
+            window.requestAnimationFrame(is_initalised ? _done : _loop);
         }
     }
     function _done() {
@@ -190,6 +220,42 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             ImGui.DestroyContext();
             console.log("Total allocated space (uordblks) @ _done:", ImGui.bind.mallinfo().uordblks);
         });
+    }
+    function ShowSkibidiWindow() {
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+        ImGui.Begin("skibidi", null, window_flags);
+        ImGui.Text("");
+        ImGui.End();
+    }
+    function ShowLimboWindow() {
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+        ImGui.Begin("limbo", null, window_flags);
+        ImGui.End();
+    }
+    function ShowGreedWindow() {
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+        ImGui.Begin("greed", null, window_flags);
+        ImGui.End();
+    }
+    function ShowAngerWindow() {
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+        ImGui.Begin("anger", null, window_flags);
+        ImGui.End();
+    }
+    function ShowWasteWindow() {
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+        ImGui.Begin("waste", null, window_flags);
+        ImGui.End();
+    }
+    function ShowLustWindow() {
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+        ImGui.Begin("lust", null, window_flags);
+        ImGui.End();
+    }
+    function ShowHeavenWindow() {
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+        ImGui.Begin("heaven", null, window_flags);
+        ImGui.End();
     }
     function ShowHelpMarker(desc) {
         ImGui.TextDisabled("(?)");
@@ -416,15 +482,19 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             }
         ],
         execute: function () {
+            six_windows = [
+                [true, "skibidi"],
+                [true, "limbo"],
+                [true, "greed"],
+                [true, "anger"],
+                [true, "waste"],
+                [true, "lust"],
+            ];
             font = null;
-            // Our state
-            show_demo_window = false;
+            is_initalised = false;
             background_colour = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
             memory_editor = new imgui_memory_editor_js_1.MemoryEditor();
             memory_editor.Open = false;
-            /* static */ f = 0.0;
-            /* static */ counter = 0;
-            done = false;
             source = [
                 "ImGui.Text(\"Hello, world!\");",
                 "ImGui.SliderFloat(\"float\",",

@@ -3,20 +3,6 @@ import * as ImGui_Impl from "./imgui_impl.js";
 import { ShowDemoWindow } from "./imgui_demo.js";
 import { MemoryEditor } from "./imgui_memory_editor.js";
 
-let font: ImGui.Font | null = null;
-
-// Our state
-let show_demo_window: boolean = false;
-const background_colour: ImGui.Vec4 = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
-
-const memory_editor: MemoryEditor = new MemoryEditor();
-memory_editor.Open = false;
-
-/* static */ let f: number = 0.0;
-/* static */ let counter: number = 0;
-
-let done: boolean = false;
-
 async function LoadArrayBuffer(url: string): Promise<ArrayBuffer> {
     const response: Response = await fetch(url);
     return response.arrayBuffer();
@@ -104,56 +90,74 @@ async function _init(): Promise<void> {
     }
 }
 
-// Main loop
-function _loop(time: number): void {
-    // Poll and handle events (inputs, window resize, etc.)
-    // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-    // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
-    // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
-    // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-    
-    // Start the Dear ImGui frame
-    ImGui_Impl.NewFrame(time);
-    ImGui.NewFrame();
-    
+type Window = [boolean, string];
+
+const six_windows: Window[] = [
+    [true, "skibidi"],
+    [true, "limbo"],
+    [true, "greed"],
+    [true, "anger"],
+    [true, "waste"],
+    [true, "lust"],
+];
+
+let font: ImGui.Font | null = null;
+let is_initalised: boolean = false;
+
+let background_colour: ImGui.Vec4 = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
+
+const memory_editor: MemoryEditor = new MemoryEditor();
+memory_editor.Open = false;
+
+// Poll and handle events (inputs, window resize, etc.)
+// You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
+// - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application.
+// - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application.
+// Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
+function _loop(time: number): void {    
+    // -----------------------
     // default window
+    ImGui.NewFrame();
     {
         // -----------------------
         // window title
-        const WindowFlags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoCollapse;
-        ImGui.Begin("lasciate ogne speranza, voi ch'intrate", null, WindowFlags);
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoCollapse;
+        ImGui.Begin("lasciate ogne speranza, voi ch'intrate", null, window_flags);
         ImGui.SetWindowSize(new ImGui.Vec2(440, 500), ImGui.Cond.Once);
-
+        const window_size = ImGui.GetWindowSize();
+        
         // -----------------------
         // text style
-        ImGui.PushTextWrapPos(ImGui.GetWindowWidth() - 2);
-
+        ImGui.PushTextWrapPos(ImGui.GetWindowWidth() - 2.0);
+        
         // -----------------------
         // preable
         ImGui.Text("Hello, you are DEAD! Yes that's right this is what the afterlife looks like; now take your time, have a look around, get comfortable. It's gonna be a helluva journey. Within this package lies your soul, this carries your pathoftime or 'memories', we will need you to interact with these memories in order for them to pass on. Though please there's certainly no rush. ");
-
+        
         // -----------------------
         // button
         ImGui.Separator();
         ImGui.Text("Pressing the below button will begin the passing stage.");
         ImGui.Button("Begin");
-
+        
         // -----------------------
         // footer
-        const WindowSize = ImGui.GetWindowSize();
-        const TextSize = ImGui.CalcTextSize("DUMMY");
-        const CursorY = WindowSize.y - TextSize.y - ImGui.GetStyle().WindowPadding.y - 2.0;
-        ImGui.SetCursorPosY(CursorY);
-
-        ImGui.Text(`frametime : ${(1000.0 / ImGui.GetIO().Framerate).toFixed(1)}ms | powered by GOD systems    `);
+        const memory_string = "Memory Editor"; 
+        const text_size = ImGui.CalcTextSize(memory_string);
+        const cursor_y = window_size.y - text_size.y - ImGui.GetStyle().WindowPadding.y - 2.0;
+        ImGui.SetCursorPosY(cursor_y);
+        
+        ImGui.Text(`frametime : ${(1000.0 / ImGui.GetIO().Framerate).toFixed(1)}ms | powered by GOD systems`);
         ImGui.SameLine();
-        if (ImGui.Button("Memory Editor"))
-        {
+        
+        const curosr_x = window_size.x - text_size.x - 10.0;
+        ImGui.SetCursorPosX(curosr_x);
+
+        if (ImGui.Button(memory_string)) {
             memory_editor.Open = !memory_editor.Open;
         }
-        if (memory_editor.Open)
-        {
-            memory_editor.DrawWindow("Memory Editor", ImGui.bind.HEAP8.buffer);
+        if (memory_editor.Open) {
+            memory_editor.DrawWindow(memory_string, ImGui.bind.HEAP8.buffer);
         }
         
         // -----------------------
@@ -161,10 +165,39 @@ function _loop(time: number): void {
         ImGui.PopTextWrapPos();
         ImGui.End();
     }
-
     ImGui.EndFrame();
 
+    // -----------------------
+    // 6 hell windows
+    six_windows.forEach(([window_isactive, window_id]) => {
+        if (window_isactive) {
+            switch(window_id)
+            {
+                case "skibidi":
+                    ShowSkibidiWindow();
+                    break;
+                case "limbo":
+                    ShowLimboWindow();
+                    break;
+                case "greed":
+                    ShowGreedWindow();
+                    break;
+                case "anger":
+                    ShowAngerWindow();
+                    break;
+                case "waste":
+                    ShowWasteWindow();
+                    break;
+                case "lust":
+                    ShowLustWindow();
+                    break;
+            }
+        }
+    });
+
+    // -----------------------
     // Rendering
+    ImGui_Impl.NewFrame(time);
     ImGui.Render();
     const gl: WebGLRenderingContext | null = ImGui_Impl.gl;
     if (gl) {
@@ -185,8 +218,9 @@ function _loop(time: number): void {
 
     ImGui_Impl.RenderDrawData(ImGui.GetDrawData());
 
+    // ??
     if (typeof(window) !== "undefined") {
-        window.requestAnimationFrame(done ? _done : _loop);
+        window.requestAnimationFrame(is_initalised ? _done : _loop);
     }
 }
 
@@ -211,6 +245,69 @@ async function _done(): Promise<void> {
     ImGui.DestroyContext();
 
     console.log("Total allocated space (uordblks) @ _done:", ImGui.bind.mallinfo().uordblks);
+}
+
+function ShowSkibidiWindow(): void {
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    ImGui.Begin("skibidi", null, window_flags);
+    
+    ImGui.Text("")
+    
+    ImGui.End();
+}
+
+function ShowLimboWindow(): void {
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    ImGui.Begin("limbo", null, window_flags);
+    
+    
+    
+    ImGui.End();
+}
+
+function ShowGreedWindow(): void {
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    ImGui.Begin("greed", null, window_flags);
+    
+    
+    
+    ImGui.End();
+}
+
+function ShowAngerWindow(): void {
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    ImGui.Begin("anger", null, window_flags);
+    
+    
+    
+    ImGui.End();
+}
+
+function ShowWasteWindow(): void {
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    ImGui.Begin("waste", null, window_flags);
+    
+    
+    
+    ImGui.End();
+}
+
+function ShowLustWindow(): void {
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    ImGui.Begin("lust", null, window_flags);
+    
+    
+    
+    ImGui.End();
+}
+
+function ShowHeavenWindow(): void {
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    ImGui.Begin("heaven", null, window_flags);
+    
+    
+    
+    ImGui.End();
 }
 
 function ShowHelpMarker(desc: string): void {
@@ -336,23 +433,7 @@ function CleanUpImage(): void {
     image_element = null;
 }
 
-const video_urls: string[] = [
-    "https://threejs.org/examples/textures/sintel.ogv",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-    "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
-];
-let video_url: string = video_urls[0];
+let video_url: string = "https://github.com/TrvsF/hell/tree/main/game/assets/skibidi.mp4";
 let video_element: HTMLVideoElement | null = null;
 let video_gl_texture: WebGLTexture | null = null;
 let video_w: number = 640;
@@ -361,6 +442,9 @@ let video_time_active: boolean = false;
 let video_time: number = 0;
 let video_duration: number = 0;
 
+// --------------------------------------
+// TODO : REFACTOR so we can have many videos playing at the same time!!
+// --------------------------------------
 function StartUpVideo(): void {
     if (typeof document !== "undefined") {
         video_element = document.createElement("video");
