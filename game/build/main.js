@@ -1,106 +1,87 @@
 System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], function (exports_1, context_1) {
     "use strict";
-    var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-            step((generator = generator.apply(thisArg, _arguments || [])).next());
-        });
-    };
-    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, six_windows, font, is_initalised, background_colour, memory_editor, source, image_urls, image_url, image_element, image_gl_texture, video_urls, video_url, video_element, video_gl_texture, video_w, video_h, video_time_active, video_time, video_duration;
+    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, six_windows, font, is_initalised, background_colour, memory_editor, source, image_urls, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h, video_time_active, video_time, video_duration;
     var __moduleName = context_1 && context_1.id;
-    function LoadArrayBuffer(url) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const response = yield fetch(url);
-            return response.arrayBuffer();
-        });
+    async function LoadArrayBuffer(url) {
+        const response = await fetch(url);
+        return response.arrayBuffer();
     }
-    function main() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield ImGui.default();
-            if (typeof (window) !== "undefined") {
-                window.requestAnimationFrame(_init);
-            }
-            else {
-                function _main() {
-                    return __awaiter(this, void 0, void 0, function* () {
-                        yield _init();
-                        for (let i = 0; i < 3; ++i) {
-                            _loop(1 / 60);
-                        }
-                        yield _done();
-                    });
+    async function main() {
+        await ImGui.default();
+        if (typeof (window) !== "undefined") {
+            window.requestAnimationFrame(_init);
+        }
+        else {
+            async function _main() {
+                await _init();
+                for (let i = 0; i < 3; ++i) {
+                    _loop(1 / 60);
                 }
-                _main().catch(console.error);
+                await _done();
             }
-        });
+            _main().catch(console.error);
+        }
     }
     exports_1("default", main);
-    function AddFontFromFileTTF(url_1, size_pixels_1) {
-        return __awaiter(this, arguments, void 0, function* (url, size_pixels, font_cfg = null, glyph_ranges = null) {
-            font_cfg = font_cfg || new ImGui.FontConfig();
-            font_cfg.Name = font_cfg.Name || `${url.split(/[\\\/]/).pop()}, ${size_pixels.toFixed(0)}px`;
-            return ImGui.GetIO().Fonts.AddFontFromMemoryTTF(yield LoadArrayBuffer(url), size_pixels, font_cfg, glyph_ranges);
-        });
+    async function AddFontFromFileTTF(url, size_pixels, font_cfg = null, glyph_ranges = null) {
+        font_cfg = font_cfg || new ImGui.FontConfig();
+        font_cfg.Name = font_cfg.Name || `${url.split(/[\\\/]/).pop()}, ${size_pixels.toFixed(0)}px`;
+        return ImGui.GetIO().Fonts.AddFontFromMemoryTTF(await LoadArrayBuffer(url), size_pixels, font_cfg, glyph_ranges);
     }
-    function _init() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const EMSCRIPTEN_VERSION = `${ImGui.bind.__EMSCRIPTEN_major__}.${ImGui.bind.__EMSCRIPTEN_minor__}.${ImGui.bind.__EMSCRIPTEN_tiny__}`;
-            console.log("Emscripten Version", EMSCRIPTEN_VERSION);
-            console.log("Total allocated space (uordblks) @ _init:", ImGui.bind.mallinfo().uordblks);
-            // Setup Dear ImGui context
-            ImGui.CHECKVERSION();
-            ImGui.CreateContext();
-            const io = ImGui.GetIO();
-            //io.ConfigFlags |= ImGui.ConfigFlags.NavEnableKeyboard;     // Enable Keyboard Controls
-            //io.ConfigFlags |= ImGui.ConfigFlags.NavEnableGamepad;      // Enable Gamepad Controls
-            // Setup Dear ImGui style
-            ImGui.StyleColorsDark();
-            //ImGui.StyleColorsClassic();
-            // Load Fonts
-            // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-            // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-            // - If the file cannot be loaded, the function will return NULL. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
-            // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
-            // - Read 'docs/FONTS.md' for more instructions and details.
-            // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-            io.Fonts.AddFontDefault();
-            font = yield AddFontFromFileTTF("../imgui/misc/fonts/Roboto-Medium.ttf", 16.0);
-            // font = await AddFontFromFileTTF("../imgui/misc/fonts/Cousine-Regular.ttf", 15.0);
-            // font = await AddFontFromFileTTF("../imgui/misc/fonts/DroidSans.ttf", 16.0);
-            // font = await AddFontFromFileTTF("../imgui/misc/fonts/ProggyTiny.ttf", 10.0);
-            // font = await AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0, null, io.Fonts.GetGlyphRangesJapanese());
-            // font = await AddFontFromFileTTF("https://raw.githubusercontent.com/googlei18n/noto-cjk/master/NotoSansJP-Regular.otf", 18.0, null, io.Fonts.GetGlyphRangesJapanese());
-            ImGui.ASSERT(font !== null);
-            // Setup Platform/Renderer backends
-            // ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
-            // ImGui_ImplOpenGL3_Init(glsl_version);
-            if (typeof (window) !== "undefined") {
-                const output = document.getElementById("output") || document.body;
-                const canvas = document.createElement("canvas");
-                output.appendChild(canvas);
-                canvas.tabIndex = 1;
-                canvas.style.position = "absolute";
-                canvas.style.left = "0px";
-                canvas.style.right = "0px";
-                canvas.style.top = "0px";
-                canvas.style.bottom = "0px";
-                canvas.style.width = "100%";
-                canvas.style.height = "100%";
-                canvas.style.userSelect = "none";
-                ImGui_Impl.Init(canvas);
-            }
-            else {
-                ImGui_Impl.Init(null);
-            }
-            StartUpImage();
-            StartUpVideo();
-            if (typeof (window) !== "undefined") {
-                window.requestAnimationFrame(_loop);
-            }
-        });
+    async function _init() {
+        const EMSCRIPTEN_VERSION = `${ImGui.bind.__EMSCRIPTEN_major__}.${ImGui.bind.__EMSCRIPTEN_minor__}.${ImGui.bind.__EMSCRIPTEN_tiny__}`;
+        console.log("Emscripten Version", EMSCRIPTEN_VERSION);
+        console.log("Total allocated space (uordblks) @ _init:", ImGui.bind.mallinfo().uordblks);
+        // Setup Dear ImGui context
+        ImGui.CHECKVERSION();
+        ImGui.CreateContext();
+        const io = ImGui.GetIO();
+        //io.ConfigFlags |= ImGui.ConfigFlags.NavEnableKeyboard;     // Enable Keyboard Controls
+        //io.ConfigFlags |= ImGui.ConfigFlags.NavEnableGamepad;      // Enable Gamepad Controls
+        // Setup Dear ImGui style
+        ImGui.StyleColorsDark();
+        //ImGui.StyleColorsClassic();
+        // Load Fonts
+        // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
+        // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
+        // - If the file cannot be loaded, the function will return NULL. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
+        // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
+        // - Read 'docs/FONTS.md' for more instructions and details.
+        // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
+        io.Fonts.AddFontDefault();
+        font = await AddFontFromFileTTF("../imgui/misc/fonts/Roboto-Medium.ttf", 16.0);
+        // font = await AddFontFromFileTTF("../imgui/misc/fonts/Cousine-Regular.ttf", 15.0);
+        // font = await AddFontFromFileTTF("../imgui/misc/fonts/DroidSans.ttf", 16.0);
+        // font = await AddFontFromFileTTF("../imgui/misc/fonts/ProggyTiny.ttf", 10.0);
+        // font = await AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0, null, io.Fonts.GetGlyphRangesJapanese());
+        // font = await AddFontFromFileTTF("https://raw.githubusercontent.com/googlei18n/noto-cjk/master/NotoSansJP-Regular.otf", 18.0, null, io.Fonts.GetGlyphRangesJapanese());
+        ImGui.ASSERT(font !== null);
+        // Setup Platform/Renderer backends
+        // ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
+        // ImGui_ImplOpenGL3_Init(glsl_version);
+        if (typeof (window) !== "undefined") {
+            const output = document.getElementById("output") || document.body;
+            const canvas = document.createElement("canvas");
+            output.appendChild(canvas);
+            canvas.tabIndex = 1;
+            canvas.style.position = "absolute";
+            canvas.style.left = "0px";
+            canvas.style.right = "0px";
+            canvas.style.top = "0px";
+            canvas.style.bottom = "0px";
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
+            canvas.style.userSelect = "none";
+            ImGui_Impl.Init(canvas);
+        }
+        else {
+            ImGui_Impl.Init(null);
+        }
+        StartUpImage();
+        StartUpVideo();
+        if (typeof (window) !== "undefined") {
+            window.requestAnimationFrame(_loop);
+        }
     }
     // Poll and handle events (inputs, window resize, etc.)
     // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
@@ -201,25 +182,23 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             window.requestAnimationFrame(is_initalised ? _done : _loop);
         }
     }
-    function _done() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const gl = ImGui_Impl.gl;
-            if (gl) {
-                gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-                gl.clearColor(background_colour.x, background_colour.y, background_colour.z, background_colour.w);
-                gl.clear(gl.COLOR_BUFFER_BIT);
-            }
-            const ctx = ImGui_Impl.ctx;
-            if (ctx) {
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            }
-            CleanUpImage();
-            CleanUpVideo();
-            // Cleanup
-            ImGui_Impl.Shutdown();
-            ImGui.DestroyContext();
-            console.log("Total allocated space (uordblks) @ _done:", ImGui.bind.mallinfo().uordblks);
-        });
+    async function _done() {
+        const gl = ImGui_Impl.gl;
+        if (gl) {
+            gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+            gl.clearColor(background_colour.x, background_colour.y, background_colour.z, background_colour.w);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
+        const ctx = ImGui_Impl.ctx;
+        if (ctx) {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        }
+        CleanUpImage();
+        CleanUpVideo();
+        // Cleanup
+        ImGui_Impl.Shutdown();
+        ImGui.DestroyContext();
+        console.log("Total allocated space (uordblks) @ _done:", ImGui.bind.mallinfo().uordblks);
     }
     function ShowSkibidiWindow() {
         const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
@@ -361,6 +340,9 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         }
         image_element = null;
     }
+    // --------------------------------------
+    // TODO : REFACTOR so we can have many videos playing at the same time!!
+    // --------------------------------------
     function StartUpVideo() {
         if (typeof document !== "undefined") {
             video_element = document.createElement("video");
@@ -421,17 +403,6 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
                 video_h = h;
             }
             ImGui.BeginGroup();
-            if (ImGui.BeginCombo("##urls", null, ImGui.ComboFlags.NoPreview | ImGui.ComboFlags.PopupAlignLeft)) {
-                for (let n = 0; n < ImGui.ARRAYSIZE(video_urls); n++) {
-                    if (ImGui.Selectable(video_urls[n])) {
-                        video_url = video_urls[n];
-                        console.log(video_url);
-                        video_element.src = video_url;
-                        video_element.autoplay = true;
-                    }
-                }
-                ImGui.EndCombo();
-            }
             ImGui.SameLine();
             ImGui.PushItemWidth(video_w - 20);
             if (ImGui.InputText("##url", (value = video_url) => video_url = value)) {
@@ -510,23 +481,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             image_url = image_urls[0];
             image_element = null;
             image_gl_texture = null;
-            video_urls = [
-                "https://threejs.org/examples/textures/sintel.ogv",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
-            ];
-            video_url = video_urls[0];
+            video_url = "https://github.com/TrvsF/hell/tree/main/game/assets/skibidi.mp4";
             video_element = null;
             video_gl_texture = null;
             video_w = 640;

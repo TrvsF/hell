@@ -508,17 +508,6 @@ function ShowMovieWindow(title: string, p_open: ImGui.Access<boolean> | null = n
         if (h > 0) { video_h = h; }
 
         ImGui.BeginGroup();
-        if (ImGui.BeginCombo("##urls", null, ImGui.ComboFlags.NoPreview | ImGui.ComboFlags.PopupAlignLeft)) {
-            for (let n = 0; n < ImGui.ARRAYSIZE(video_urls); n++) {
-                if (ImGui.Selectable(video_urls[n])) {
-                    video_url = video_urls[n];
-                    console.log(video_url);
-                    video_element.src = video_url;
-                    video_element.autoplay = true;
-                }
-            }
-            ImGui.EndCombo();
-        }
         ImGui.SameLine();
         ImGui.PushItemWidth(video_w - 20);
         if (ImGui.InputText("##url", (value = video_url) => video_url = value)) {
