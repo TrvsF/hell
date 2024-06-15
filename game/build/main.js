@@ -210,14 +210,14 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
     function ShowSkibidiWindow() {
         const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.AlwaysAutoResize;
         ImGui.Begin("skibidi", null, window_flags);
+        // -----------------------
+        // play video
         if (video_element !== null) {
             if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
                 ImGui.ImageButton(video_gl_texture, new ImGui.Vec2(video_w, video_h));
+                video_element.volume = 0.1337;
                 video_element.play();
             }
-        }
-        else {
-            ImGui.Text("No Video Element");
         }
         ImGui.End();
     }
@@ -229,6 +229,10 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
     function ShowGreedWindow() {
         const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
         ImGui.Begin("greed", null, window_flags);
+        ImGui.SetWindowSize(new ImGui.Vec2(240, 240), ImGui.Cond.Once);
+        ImGui.PushTextWrapPos(ImGui.GetWindowWidth() - 2.0);
+        ImGui.Text("you see a homeless person; their clothes are worn, their eyes look tired, they smell. They ask for some change, you have a few coins in your pocket, do you hand them over?");
+        ImGui.PopTextWrapPos();
         ImGui.End();
     }
     function ShowAngerWindow() {
