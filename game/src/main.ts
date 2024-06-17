@@ -97,7 +97,6 @@ type Window = {
 
 const six_windows: Window[] = [
     { window_isactive: false, window_id: "skibidi" },
-    { window_isactive: false, window_id: "limbo" },
     { window_isactive: false, window_id: "greed" },
     { window_isactive: false, window_id: "anger" },
     { window_isactive: false, window_id: "waste" },
@@ -176,8 +175,7 @@ function _loop(time: number): void {
         ImGui.PopTextWrapPos();
         ImGui.End();
     }
-    ImGui.EndFrame();
-
+    
     // -----------------------
     // 6 hell windows
     six_windows.forEach(window => {
@@ -186,9 +184,6 @@ function _loop(time: number): void {
             {
                 case "skibidi":
                     ShowSkibidiWindow();
-                    break;
-                case "limbo":
-                    ShowLimboWindow();
                     break;
                 case "greed":
                     ShowGreedWindow();
@@ -205,6 +200,8 @@ function _loop(time: number): void {
             }
         }
     });
+
+    ImGui.EndFrame(); // >:(
 
     // -----------------------
     // Rendering
@@ -276,25 +273,77 @@ function ShowSkibidiWindow(): void {
     ImGui.End();
 }
 
-function ShowLimboWindow(): void {
-    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
-    ImGui.Begin("limbo", null, window_flags);
-    
-    
-    
-    ImGui.End();
-}
+var greed_flag: number = 0;                 // this should be an enum flag!!!!!
+                                            // 0 = no input, 1 = yes, 2 = no
+var random_num: number = RandomInt(0, 10);  // this is also shit!
+const yes_replies: string[] = [
+    "he took your money & bought drugs. are you happy?",
+    "she took your money & bought drugs. are you sad?",
+    "they died that night, how does that make you feel?"
+];
+const no_replies: string[] = [
+    "that person had children; they will go hungry tonite because of the majority of people act like you, how does that make you feel?",
+    "they died that night, how does that make you feel?",
+    "they love you"
+];
 
+const str0 = new ImGui.StringBuffer(128, "");
 function ShowGreedWindow(): void {
-    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.NoResize;
     ImGui.Begin("greed", null, window_flags);
+    ImGui.PushID("GREED");
 
     ImGui.SetWindowSize(new ImGui.Vec2(240, 240), ImGui.Cond.Once);
     ImGui.PushTextWrapPos(ImGui.GetWindowWidth() - 2.0);
+    const window_size = ImGui.GetWindowSize();
     
-    ImGui.Text("you see a homeless person; their clothes are worn, their eyes look tired, they smell. They ask for some change, you have a few coins in your pocket, do you hand them over?");
+    switch(greed_flag)
+    {
+        case 0:
+            ImGui.Text("you see a homeless person; their clothes are worn, their eyes look tired, they smell. They ask, somewhat politely, for some change. You have a few coins in your pocket, do you hand them over?");
+            break;
+        case 1:
+            ImGui.Text(yes_replies[random_num % yes_replies.length]);
+            break;
+        case 2:
+            ImGui.Text(no_replies[random_num % no_replies.length]);
+            break;
+    }
     
+    // -----------------------
+    // footer
+    const temp_string = "Temp"; 
+    const text_size = ImGui.CalcTextSize(temp_string);
+    const cursor_y = window_size.y - text_size.y - ImGui.GetStyle().WindowPadding.y - 2.0;
+    ImGui.SetCursorPosY(cursor_y);
+    
+    if (greed_flag === 0) {
+        if (ImGui.Button("yes")) {
+            greed_flag = 1;
+        }
+        ImGui.SameLine();
+        if (ImGui.Button("no")) {
+            greed_flag = 2;
+        }
+    } else {
+        const input_flags = ImGui.ImGuiInputTextFlags.EnterReturnsTrue;
+        ImGui.PushItemWidth(-1);
+        if (ImGui.InputText("greed_input", str0, ImGui.ARRAYSIZE(str0), input_flags)) {
+            str0.buffer = "";
+            random_num++;
+            greed_flag = 0;
+        }
+        ImGui.PopItemWidth();
+        ImGui.SameLine();
+        if (ImGui.Button("enter")) {
+            str0.buffer = "";
+            random_num++;
+            greed_flag = 0;
+        }
+    }
+
     ImGui.PopTextWrapPos();
+    ImGui.PopID();
     ImGui.End();
 }
 
@@ -302,7 +351,7 @@ function ShowAngerWindow(): void {
     const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
     ImGui.Begin("anger", null, window_flags);
     
-    
+    ImGui.Text("what do you think of immigrants?");
     
     ImGui.End();
 }
@@ -311,7 +360,7 @@ function ShowWasteWindow(): void {
     const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
     ImGui.Begin("waste", null, window_flags);
     
-    
+    ImGui.Text("what do you think of time?");
     
     ImGui.End();
 }
@@ -320,7 +369,7 @@ function ShowLustWindow(): void {
     const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
     ImGui.Begin("lust", null, window_flags);
     
-    
+    ImGui.Text("what do you think of sex?");
     
     ImGui.End();
 }
@@ -342,6 +391,10 @@ const image_urls: string[] = [
 let image_url: string = image_urls[0];
 let image_element: HTMLImageElement | null = null;
 let image_gl_texture: WebGLTexture | null = null;
+
+function RandomInt(min: number, max:number): number { // min and max included 
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 function StartUpImage(): void {
     if (typeof document !== "undefined") {
@@ -456,4 +509,19 @@ function UpdateVideo(): void {
 function ShowMovieWindow(title: string, p_open: ImGui.Access<boolean> | null = null): void {
     ImGui.Begin(title, p_open, ImGui.WindowFlags.AlwaysAutoResize);
     
+}
+
+function UNIQUE(key: string): string { return key; }
+
+class Static<T> {
+    constructor(public value: T) {}
+    access: ImGui.Access<T> = (value: T = this.value): T => this.value = value;
+}
+
+const _static_map: Map<string, Static<any>> = new Map();
+
+function STATIC<T>(key: string, init: T): Static<T> {
+    let value: Static<T> | undefined = _static_map.get(key);
+    if (value === undefined) { _static_map.set(key, value = new Static<T>(init)); }
+    return value;
 }
