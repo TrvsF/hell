@@ -505,23 +505,3 @@ function UpdateVideo(): void {
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video_element);
     }
 }
-
-function ShowMovieWindow(title: string, p_open: ImGui.Access<boolean> | null = null): void {
-    ImGui.Begin(title, p_open, ImGui.WindowFlags.AlwaysAutoResize);
-    
-}
-
-function UNIQUE(key: string): string { return key; }
-
-class Static<T> {
-    constructor(public value: T) {}
-    access: ImGui.Access<T> = (value: T = this.value): T => this.value = value;
-}
-
-const _static_map: Map<string, Static<any>> = new Map();
-
-function STATIC<T>(key: string, init: T): Static<T> {
-    let value: Static<T> | undefined = _static_map.get(key);
-    if (value === undefined) { _static_map.set(key, value = new Static<T>(init)); }
-    return value;
-}
