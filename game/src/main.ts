@@ -1,4 +1,4 @@
-import * as ImGui from "imgui-js";
+import imgui, * as ImGui from "imgui-js";
 import * as ImGui_Impl from "./imgui_impl.js";
 import { MemoryEditor } from "./imgui_memory_editor.js";
 
@@ -200,19 +200,32 @@ var greed_flag: number = 0;                 // this should be an enum flag!!!!!
 var random_num: number = RandomInt(0, 10);  // this is also shit!
 
 const questions: string[] = [
-    "you see a homeless person; their clothes are worn, their eyes look tired, they smell. They ask, somewhat politely, for some change. You have a few coins in your pocket, do you hand them over?",
-    "zdsddcv",
-    "zdsddc2",
+    "you see a person slumpted against a wall; their clothes are worn, their eyes look tired, they smell. They ask, somewhat politely, for some change. You have a few coins in your pocket, do you hand them over?",
+    "a person approaches you from across the road while you're walking, they're loud but not hateful. they ask for money but there's a corner shop behind them, do you get them something from the shop?",
+    "you are directly approached by a person exclaiming that they are homeless & need money from you to survive. you feel cornered. you polietly decline; the person takes it in good faith & begins walking away in the direction you were just heading, do you walk in the same direction?",
+    "you are walking home with a small pizza in a box, you pass a scruffy looking person who asks for a slice. they say they need it to survive. do you give them a slice?",
+    "whenever you go to your favourite shop in the morning there is a person who sits on a plastic box begging. they are polite & friendly. do you build a relationship with this person & regularly buy them items?",
 ]
+// this implimentation is also also shit!
 const yes_replies: string[] = [
-    "he took your money & bought drugs. are you happy?",
-    "she took your money & bought drugs. are you sad?",
-    "they died that night, how does that make you feel?",
+    "he took your goodwill & exchanged it for drugs",
+    "she took your goodwill & exchanged it for drugs",
+    "they died that night",
+    "they thank their god for you",
+    "they love you",
+    "you were soon mugged because a passerby assumed you are rich",
+    "does that make you feel powerful?",
+    "do you always do that?",
 ];
 const no_replies: string[] = [
-    "that person had children; they will go hungry tonite because of the majority of people act like you, how does that make you feel?",
-    "they died that night, how does that make you feel?",
-    "they love you",
+    "that person had children; they will go hungry tonite because of the majority of people act like you",
+    "that person will now not eat; they will go hungry tonite because of the majority of people act like you",
+    "they died that night",
+    "they rely on people to survive",
+    "how could you?",
+    "do you think money is more important than other people?",
+    "do you often ignore such people?",
+    "do you always do that?",
 ];
 
 const greed_stringbuilder = new ImGui.StringBuffer(128, "");
@@ -291,7 +304,10 @@ function ShowAngerWindow(window_name: string): void {
         OnWindowFocus(window_name);
     }
 
-    ImGui.Text("what do you think of immigrants?");
+    ImGui.SetWindowSize(new ImGui.Vec2(150, 150), ImGui.Cond.Once);
+    ImGui.Text(ImGui.GetMousePos().x.toPrecision(4).toString());
+    ImGui.SameLine();
+    ImGui.Text(ImGui.GetMousePos().y.toPrecision(4).toString());
 
     ImGui.End();
 }
@@ -304,11 +320,18 @@ function ShowWasteWindow(window_name: string): void {
         OnWindowFocus(window_name);
     }
 
-    ImGui.Text("what do you think of time?");
+    ImGui.Text(ImGui.GetTime().toString());
 
     ImGui.End();
 }
 
+const image_urls: string[] = [
+    "assets/p1.png",
+    "assets/p2.png",
+    "assets/p3.png",
+    "assets/p4.png",
+];
+let img_index: number = 0;
 function ShowLustWindow(window_name: string): void {
     const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
     ImGui.Begin(window_name, null, window_flags);
@@ -317,7 +340,16 @@ function ShowLustWindow(window_name: string): void {
         OnWindowFocus(window_name);
     }
 
-    ImGui.Text("what do you think of sex?");
+    ImGui.SetWindowSize(new ImGui.Vec2(281, 281), ImGui.Cond.Once);
+    let window_size = ImGui.GetWindowSize();
+    window_size.x -= 24;
+    window_size.y -= 24;
+    if (ImGui.ImageButton(image_gl_texture, window_size)) {
+        img_index++;
+        if (image_element) {
+            image_element.src = image_urls[img_index % image_urls.length];
+        }
+    }
 
     ImGui.End();
 }
@@ -436,11 +468,7 @@ function OnWindowFocus(window_name: string): void {
     }
 }
 
-const image_urls: string[] = [
-    "https://threejs.org/examples/textures/crate.gif",
-    "https://threejs.org/examples/textures/sprite.png",
-    "https://threejs.org/examples/textures/uv_grid_opengl.jpg",
-];
+// TODO : should be struct
 let image_url: string = image_urls[0];
 let image_element: HTMLImageElement | null = null;
 let image_gl_texture: WebGLTexture | null = null;
@@ -502,6 +530,7 @@ function CleanUpImage(): void {
     image_element = null;
 }
 
+// TODO : should be struct
 let video_url: string = "assets/skibidi.mp4";
 let video_element: HTMLVideoElement | null = null;
 let video_gl_texture: WebGLTexture | null = null;
