@@ -198,15 +198,21 @@ function ShowSkibidiWindow(window_name: string): void {
 var greed_flag: number = 0;                 // this should be an enum flag!!!!!
 // 0 = no input, 1 = yes, 2 = no
 var random_num: number = RandomInt(0, 10);  // this is also shit!
+
+const questions: string[] = [
+    "you see a homeless person; their clothes are worn, their eyes look tired, they smell. They ask, somewhat politely, for some change. You have a few coins in your pocket, do you hand them over?",
+    "zdsddcv",
+    "zdsddc2",
+]
 const yes_replies: string[] = [
     "he took your money & bought drugs. are you happy?",
     "she took your money & bought drugs. are you sad?",
-    "they died that night, how does that make you feel?"
+    "they died that night, how does that make you feel?",
 ];
 const no_replies: string[] = [
     "that person had children; they will go hungry tonite because of the majority of people act like you, how does that make you feel?",
     "they died that night, how does that make you feel?",
-    "they love you"
+    "they love you",
 ];
 
 const greed_stringbuilder = new ImGui.StringBuffer(128, "");
@@ -224,7 +230,7 @@ function ShowGreedWindow(window_name: string): void {
 
     switch (greed_flag) {
         case 0:
-            ImGui.Text("you see a homeless person; their clothes are worn, their eyes look tired, they smell. They ask, somewhat politely, for some change. You have a few coins in your pocket, do you hand them over?");
+            ImGui.Text(questions[random_num % questions.length]);
             break;
         case 1:
             ImGui.Text(yes_replies[random_num % yes_replies.length]);

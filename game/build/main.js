@@ -1,6 +1,6 @@
 System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], function (exports_1, context_1) {
     "use strict";
-    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, greed_flag, random_num, yes_replies, no_replies, greed_stringbuilder, six_windows, font, is_initalised, has_game_started, background_colour, memory_editor, window_focus_stack, image_urls, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h;
+    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, greed_flag, random_num, questions, yes_replies, no_replies, greed_stringbuilder, six_windows, font, is_initalised, has_game_started, background_colour, memory_editor, window_focus_stack, image_urls, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h;
     var __moduleName = context_1 && context_1.id;
     async function LoadArrayBuffer(url) {
         const response = await fetch(url);
@@ -182,13 +182,13 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         }
         switch (greed_flag) {
             case 0:
-                ImGui.Text("you see a homeless person; their clothes are worn, their eyes look tired, they smell. They ask, somewhat politely, for some change. You have a few coins in your pocket, do you hand them over?");
+                ImGui.Text(questions[random_num % (questions.length)]);
                 break;
             case 1:
-                ImGui.Text(yes_replies[random_num % yes_replies.length]);
+                ImGui.Text(yes_replies[random_num % (yes_replies.length)]);
                 break;
             case 2:
-                ImGui.Text(no_replies[random_num % no_replies.length]);
+                ImGui.Text(no_replies[random_num % (no_replies.length)]);
                 break;
         }
         // -----------------------
@@ -445,15 +445,20 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             greed_flag = 0; // this should be an enum flag!!!!!
             // 0 = no input, 1 = yes, 2 = no
             random_num = RandomInt(0, 10); // this is also shit!
+            questions = [
+                "you see a homeless person; their clothes are worn, their eyes look tired, they smell. They ask, somewhat politely, for some change. You have a few coins in your pocket, do you hand them over?",
+                "zdsddcv",
+                "zdsddc2",
+            ];
             yes_replies = [
                 "he took your money & bought drugs. are you happy?",
                 "she took your money & bought drugs. are you sad?",
-                "they died that night, how does that make you feel?"
+                "they died that night, how does that make you feel?",
             ];
             no_replies = [
                 "that person had children; they will go hungry tonite because of the majority of people act like you, how does that make you feel?",
                 "they died that night, how does that make you feel?",
-                "they love you"
+                "they love you",
             ];
             greed_stringbuilder = new ImGui.StringBuffer(128, "");
             six_windows = [
