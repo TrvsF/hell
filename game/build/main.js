@@ -1,6 +1,6 @@
 System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], function (exports_1, context_1) {
     "use strict";
-    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, greed_flag, random_num, questions, yes_replies, no_replies, greed_stringbuilder, image_urls, img_index, six_windows, font, is_initalised, has_game_started, background_colour, memory_editor, window_focus_stack, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h;
+    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, GameState, game_state, greed_flag, random_num, questions, yes_replies, no_replies, greed_stringbuilder, image_urls, img_index, six_windows, font, is_initalised, background_colour, memory_editor, window_focus_stack, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h;
     var __moduleName = context_1 && context_1.id;
     async function LoadArrayBuffer(url) {
         const response = await fetch(url);
@@ -124,12 +124,12 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         // button
         ImGui.Separator();
         ImGui.Text("Pressing the below button will begin the passing stage.");
-        if (!has_game_started) {
+        if (game_state == GameState.Intro) {
             if (ImGui.Button("Begin")) {
                 six_windows.forEach(window => {
                     window.window_isactive = true;
                 });
-                has_game_started = true;
+                game_state = GameState.Base;
             }
         }
         // -----------------------
@@ -254,54 +254,101 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
     function ShowLustWindow(window_name) {
         const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
         ImGui.Begin(window_name, null, window_flags);
+        ImGui.SetWindowSize(new ImGui.Vec2(281, 281), ImGui.Cond.Once);
         if (ImGui.IsWindowFocused()) {
             OnWindowFocus(window_name);
         }
-        ImGui.SetWindowSize(new ImGui.Vec2(281, 281), ImGui.Cond.Once);
+        // -----------------------
+        // draw image
         let window_size = ImGui.GetWindowSize();
         window_size.x -= 24;
         window_size.y -= 24;
         if (ImGui.ImageButton(image_gl_texture, window_size)) {
             img_index++;
             if (image_element) {
-                image_element.src = image_urls[img_index % image_urls.length];
+                image_element.src = image_urls[img_index % image_urls.length].asset_url;
             }
+        }
+        // -----------------------
+        // check size
+        const viewport_size = ImGui.GetMainViewport().Size;
+        const big_window_size = new ImGui.Vec2(viewport_size.x * 0.7, viewport_size.y * 0.7);
+        const small_window_size = new ImGui.Vec2(viewport_size.x * 0.05, viewport_size.y * 0.05);
+        if (window_size.x <= small_window_size.x && window_size.y <= small_window_size.y) {
+            console.log("small");
+        }
+        else if (window_size.x >= big_window_size.x && window_size.y >= big_window_size.y) {
+            console.log("larg");
         }
         ImGui.End();
     }
     function ShowHeavenWindow(window_name) {
-        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+        background_colour = new ImGui.Vec4(1, 1, 1, 1);
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.NoResize | ImGui.WindowFlags.NoMove;
         ImGui.Begin(window_name, null, window_flags);
+        const dead_string = "you are dead, there is now peace  ";
+        const text_size = ImGui.CalcTextSize(dead_string);
+        ImGui.SetWindowSize(text_size);
+        ImGui.SetWindowPos(new ImGui.ImVec2(50, 50));
+        ImGui.SetMouseCursor(ImGui.ImGuiMouseCursor.None);
+        ImGui.Text(dead_string);
+        ImGui.End();
+    }
+    function ShowHellWindow(window_name) {
+        background_colour = new ImGui.Vec4(0, 0, 0, 0);
+        const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.NoResize | ImGui.WindowFlags.NoMove;
+        ImGui.Begin(window_name, null, window_flags);
+        const dead_string = "you are dead, there is no peace  ";
+        const text_size = ImGui.CalcTextSize(dead_string);
+        const viewport_size = ImGui.GetMainViewport().Size;
+        ImGui.SetWindowSize(text_size);
+        ImGui.SetWindowPos(new ImGui.ImVec2(viewport_size.x - 50 - text_size.x, viewport_size.y - 50 - text_size.y));
+        ImGui.SetMouseCursor(ImGui.ImGuiMouseCursor.None);
+        ImGui.Text(dead_string);
         ImGui.End();
     }
     function _loop(time) {
         ImGui.NewFrame();
         // -----------------------
-        // 6 hell windows
-        six_windows.forEach(window => {
-            if (window.window_isactive) {
-                switch (window.window_id) {
-                    case "skibidi":
-                        ShowSkibidiWindow("skibidi");
-                        break;
-                    case "greed":
-                        ShowGreedWindow("greed");
-                        break;
-                    case "anger":
-                        ShowAngerWindow("anger");
-                        break;
-                    case "waste":
-                        ShowWasteWindow("waste");
-                        break;
-                    case "lust":
-                        ShowLustWindow("lust");
-                        break;
-                    case "limbo":
-                        ShowLimboWindow("limbo");
-                        break;
-                }
-            }
-        });
+        // check for gameover states
+        if (memory_editor.IsErase) {
+            game_state = GameState.Hell;
+        }
+        switch (game_state) {
+            case GameState.Base:
+            case GameState.Intro:
+                six_windows.forEach(window => {
+                    if (window.window_isactive) {
+                        switch (window.window_id) {
+                            case "skibidi":
+                                ShowSkibidiWindow("skibidi");
+                                break;
+                            case "greed":
+                                ShowGreedWindow("greed");
+                                break;
+                            case "anger":
+                                ShowAngerWindow("anger");
+                                break;
+                            case "waste":
+                                ShowWasteWindow("waste");
+                                break;
+                            case "lust":
+                                ShowLustWindow("lust");
+                                break;
+                            case "limbo":
+                                ShowLimboWindow("limbo");
+                                break;
+                        }
+                    }
+                });
+                break;
+            case GameState.Heaven:
+                ShowHeavenWindow("heaven");
+                break;
+            case GameState.Hell:
+                ShowHellWindow("Hell");
+                break;
+        }
         ImGui.EndFrame(); // >:(
         // -----------------------
         // Rendering
@@ -454,6 +501,13 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             }
         ],
         execute: function () {
+            (function (GameState) {
+                GameState[GameState["Intro"] = 1] = "Intro";
+                GameState[GameState["Base"] = 2] = "Base";
+                GameState[GameState["Heaven"] = 3] = "Heaven";
+                GameState[GameState["Hell"] = 4] = "Hell";
+            })(GameState || (GameState = {}));
+            game_state = GameState.Intro;
             greed_flag = 0; // this should be an enum flag!!!!!
             // 0 = no input, 1 = yes, 2 = no
             random_num = RandomInt(0, 10); // this is also shit!
@@ -487,10 +541,10 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             ];
             greed_stringbuilder = new ImGui.StringBuffer(128, "");
             image_urls = [
-                "assets/p1.png",
-                "assets/p2.png",
-                "assets/p3.png",
-                "assets/p4.png",
+                { asset_url: "assets/p1.png", is_lustful: true },
+                { asset_url: "assets/p2.png", is_lustful: true },
+                { asset_url: "assets/p3.png", is_lustful: false },
+                { asset_url: "assets/p4.png", is_lustful: true },
             ];
             img_index = 0;
             six_windows = [
@@ -503,8 +557,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             ];
             font = null;
             is_initalised = false;
-            has_game_started = false;
-            background_colour = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
+            background_colour = new ImGui.Vec4(0.6, 0.1, 0, 1);
             memory_editor = new imgui_memory_editor_js_1.MemoryEditor();
             memory_editor.Open = false;
             // --------------------------------------
@@ -512,7 +565,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
             // --------------------------------------
             window_focus_stack = [];
             // TODO : should be struct
-            image_url = image_urls[0];
+            image_url = image_urls[0].asset_url;
             image_element = null;
             image_gl_texture = null;
             // TODO : should be struct

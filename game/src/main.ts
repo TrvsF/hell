@@ -112,6 +112,14 @@ async function _init(): Promise<void> {
     }
 }
 
+enum GameState {
+    Intro = 1,
+    Base,
+    Heaven,
+    Hell,
+}
+var game_state: GameState = GameState.Intro;
+
 // --------------------------------------
 // windowz
 // --------------------------------------
@@ -139,12 +147,12 @@ function ShowLimboWindow(window_name: string): void {
     // button
     ImGui.Separator();
     ImGui.Text("Pressing the below button will begin the passing stage.");
-    if (!has_game_started) {
+    if (game_state == GameState.Intro) {
         if (ImGui.Button("Begin")) {
             six_windows.forEach(window => {
                 window.window_isactive = true;
             });
-            has_game_started = true;
+            game_state = GameState.Base;
         }
     }
 
@@ -325,40 +333,82 @@ function ShowWasteWindow(window_name: string): void {
     ImGui.End();
 }
 
-const image_urls: string[] = [
-    "assets/p1.png",
-    "assets/p2.png",
-    "assets/p3.png",
-    "assets/p4.png",
+type LustPicture = {
+    asset_url: string;
+    is_lustful: boolean;
+};
+
+const image_urls: LustPicture[] = [
+    { asset_url: "assets/p1.png", is_lustful: true },
+    { asset_url: "assets/p2.png", is_lustful: true },
+    { asset_url: "assets/p3.png", is_lustful: false },
+    { asset_url: "assets/p4.png", is_lustful: true },
 ];
 let img_index: number = 0;
 function ShowLustWindow(window_name: string): void {
     const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
     ImGui.Begin(window_name, null, window_flags);
+    ImGui.SetWindowSize(new ImGui.Vec2(281, 281), ImGui.Cond.Once);
 
     if (ImGui.IsWindowFocused()) {
         OnWindowFocus(window_name);
     }
 
-    ImGui.SetWindowSize(new ImGui.Vec2(281, 281), ImGui.Cond.Once);
+    // -----------------------
+    // draw image
     let window_size = ImGui.GetWindowSize();
     window_size.x -= 24;
     window_size.y -= 24;
     if (ImGui.ImageButton(image_gl_texture, window_size)) {
         img_index++;
         if (image_element) {
-            image_element.src = image_urls[img_index % image_urls.length];
+            image_element.src = image_urls[img_index % image_urls.length].asset_url;
         }
+    }
+
+    // -----------------------
+    // check size
+    const viewport_size = ImGui.GetMainViewport().Size
+    const big_window_size = new ImGui.Vec2(viewport_size.x * 0.7, viewport_size.y * 0.7);
+    const small_window_size = new ImGui.Vec2(viewport_size.x * 0.05, viewport_size.y * 0.05);
+
+    if (window_size.x <= small_window_size.x && window_size.y <= small_window_size.y) {
+        console.log("small");
+    } 
+    else if (window_size.x >= big_window_size.x && window_size.y >= big_window_size.y) {
+        console.log("larg");
     }
 
     ImGui.End();
 }
 
 function ShowHeavenWindow(window_name: string): void {
-    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
+    background_colour = new ImGui.Vec4(1, 1, 1, 1);
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.NoResize | ImGui.WindowFlags.NoMove;
     ImGui.Begin(window_name, null, window_flags);
 
+    const dead_string = "you are dead, there is now peace  ";
+    const text_size = ImGui.CalcTextSize(dead_string);
+    ImGui.SetWindowSize(text_size);
+    ImGui.SetWindowPos(new ImGui.ImVec2(50, 50));
+    ImGui.SetMouseCursor(ImGui.ImGuiMouseCursor.None);
+    ImGui.Text(dead_string);
 
+    ImGui.End();
+}
+
+function ShowHellWindow(window_name: string): void {
+    background_colour = new ImGui.Vec4(0, 0, 0, 0);
+    const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.NoResize | ImGui.WindowFlags.NoMove;
+    ImGui.Begin(window_name, null, window_flags);
+
+    const dead_string = "you are dead, there is no peace  ";
+    const text_size = ImGui.CalcTextSize(dead_string);
+    const viewport_size = ImGui.GetMainViewport().Size;
+    ImGui.SetWindowSize(text_size);
+    ImGui.SetWindowPos(new ImGui.ImVec2(viewport_size.x - 50 - text_size.x, viewport_size.y - 50 - text_size.y));
+    ImGui.SetMouseCursor(ImGui.ImGuiMouseCursor.None);
+    ImGui.Text(dead_string);
 
     ImGui.End();
 }
@@ -379,9 +429,8 @@ const six_windows: Window[] = [
 
 let font: ImGui.Font | null = null;
 let is_initalised: boolean = false;
-let has_game_started: boolean = false;
 
-let background_colour: ImGui.Vec4 = new ImGui.Vec4(0.6, 0.1, 0.0, 1.00);
+let background_colour: ImGui.Vec4 = new ImGui.Vec4(0.6, 0.1, 0, 1);
 
 const memory_editor: MemoryEditor = new MemoryEditor();
 memory_editor.Open = false;
@@ -390,31 +439,48 @@ function _loop(time: number): void {
     ImGui.NewFrame();
 
     // -----------------------
-    // 6 hell windows
-    six_windows.forEach(window => {
-        if (window.window_isactive) {
-            switch (window.window_id) {
-                case "skibidi":
-                    ShowSkibidiWindow("skibidi");
-                    break;
-                case "greed":
-                    ShowGreedWindow("greed");
-                    break;
-                case "anger":
-                    ShowAngerWindow("anger");
-                    break;
-                case "waste":
-                    ShowWasteWindow("waste");
-                    break;
-                case "lust":
-                    ShowLustWindow("lust");
-                    break;
-                case "limbo":
-                    ShowLimboWindow("limbo");
-                    break;
-            }
-        }
-    });
+    // check for gameover states
+    if (memory_editor.IsErase) {
+        game_state = GameState.Hell;
+    }
+
+    switch (game_state) {
+        case GameState.Base:
+        case GameState.Intro:
+            six_windows.forEach(window => {
+                if (window.window_isactive) {
+                    switch (window.window_id) {
+                        case "skibidi":
+                            ShowSkibidiWindow("skibidi");
+                            break;
+                        case "greed":
+                            ShowGreedWindow("greed");
+                            break;
+                        case "anger":
+                            ShowAngerWindow("anger");
+                            break;
+                        case "waste":
+                            ShowWasteWindow("waste");
+                            break;
+                        case "lust":
+                            ShowLustWindow("lust");
+                            break;
+                        case "limbo":
+                            ShowLimboWindow("limbo");
+                            break;
+                    }
+                }
+            });
+            break;
+
+        case GameState.Heaven:
+            ShowHeavenWindow("heaven");
+            break;
+
+        case GameState.Hell:
+            ShowHellWindow("Hell");
+            break;
+    }
 
     ImGui.EndFrame(); // >:(
 
@@ -469,7 +535,7 @@ function OnWindowFocus(window_name: string): void {
 }
 
 // TODO : should be struct
-let image_url: string = image_urls[0];
+let image_url: string = image_urls[0].asset_url;
 let image_element: HTMLImageElement | null = null;
 let image_gl_texture: WebGLTexture | null = null;
 

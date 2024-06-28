@@ -3,6 +3,7 @@ type float = number;
 type size_t = number;
 import * as ImGui from "imgui-js";
 export declare class MemoryEditor {
+    IsErase: boolean;
     Open: boolean;
     ReadOnly: boolean;
     Cols: int;

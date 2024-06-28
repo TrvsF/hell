@@ -68,6 +68,7 @@ import * as ImGui from "imgui-js";
 
 export class MemoryEditor
 {
+    IsErase: boolean;                               // = false   // travis hacky hack hack- fuck ur code
     // Settings
     Open: boolean;                                   // = true   // set to false when DrawWindow() was closed. ignore if not using DrawWindow().
     ReadOnly: boolean;                               // = false  // disable any editing.
@@ -100,6 +101,7 @@ export class MemoryEditor
     constructor()
     {
         // Settings
+        this.IsErase = false;
         this.Open = true;
         this.ReadOnly = false;
         this.Cols = 16;
@@ -483,39 +485,43 @@ export class MemoryEditor
             return `Range ${s_min}..${s_max}`;
         };
 
-        // Options menu
-        if (ImGui.Button("Options"))
-            ImGui.OpenPopup("context");
-        if (ImGui.BeginPopup("context"))
-        {
-            ImGui.PushItemWidth(56);
-            if (ImGui.DragInt("##cols", (_ = this.Cols) => this.Cols = _, 0.2, 4, 32, "%d cols")) { this.ContentsWidthChanged = true; if (this.Cols < 1) this.Cols = 1; }
-            ImGui.PopItemWidth();
-            ImGui.Checkbox("Show Data Preview", (_ = this.OptShowDataPreview) => this.OptShowDataPreview = _);
-            ImGui.Checkbox("Show HexII", (_ = this.OptShowHexII) => this.OptShowHexII = _);
-            if (ImGui.Checkbox("Show Ascii", (_ = this.OptShowAscii) => this.OptShowAscii = _)) { this.ContentsWidthChanged = true; }
-            ImGui.Checkbox("Grey out zeroes", (_ = this.OptGreyOutZeroes) => this.OptGreyOutZeroes = _);
-            ImGui.Checkbox("Uppercase Hex", (_ = this.OptUpperCaseHex) => this.OptUpperCaseHex = _);
-
-            ImGui.EndPopup();
+        if (ImGui.Button("Erase")) {
+            this.IsErase = true;
         }
+        // Options menu
+        // if (ImGui.Button("Options"))
+        //     ImGui.OpenPopup("context");
+        // if (ImGui.BeginPopup("context"))
+        // {
+        //     ImGui.PushItemWidth(56);
+        //     if (ImGui.DragInt("##cols", (_ = this.Cols) => this.Cols = _, 0.2, 4, 32, "%d cols")) { this.ContentsWidthChanged = true; if (this.Cols < 1) this.Cols = 1; }
+        //     ImGui.PopItemWidth();
+        //     ImGui.Checkbox("Show Data Preview", (_ = this.OptShowDataPreview) => this.OptShowDataPreview = _);
+        //     ImGui.Checkbox("Show HexII", (_ = this.OptShowHexII) => this.OptShowHexII = _);
+        //     if (ImGui.Checkbox("Show Ascii", (_ = this.OptShowAscii) => this.OptShowAscii = _)) { this.ContentsWidthChanged = true; }
+        //     ImGui.Checkbox("Grey out zeroes", (_ = this.OptGreyOutZeroes) => this.OptGreyOutZeroes = _);
+        //     ImGui.Checkbox("Uppercase Hex", (_ = this.OptUpperCaseHex) => this.OptUpperCaseHex = _);
+
+        //     ImGui.EndPopup();
+        // }
 
         ImGui.SameLine();
         // ImGui.Text(format_range, s.AddrDigitsCount, base_display_addr, s.AddrDigitsCount, base_display_addr + mem_size - 1);
-        ImGui.Text(format_range(s.AddrDigitsCount, base_display_addr, s.AddrDigitsCount, base_display_addr + mem_size - 1));
-        ImGui.SameLine();
+        // ImGui.Text(format_range(s.AddrDigitsCount, base_display_addr, s.AddrDigitsCount, base_display_addr + mem_size - 1));
+        // ImGui.SameLine();
         ImGui.PushItemWidth((s.AddrDigitsCount + 1) * s.GlyphWidth + style.FramePadding.x * 2.0);
-        if (ImGui.InputText("##addr", this.AddrInputBuf, 32, ImGui.InputTextFlags.CharsHexadecimal | ImGui.InputTextFlags.EnterReturnsTrue))
-        {
-            // size_t goto_addr;
-            let goto_addr: size_t;
-            // if (sscanf(AddrInputBuf, "%" _PRISizeT "X", &goto_addr) === 1)
-            if (Number.isInteger(goto_addr = parseInt(this.AddrInputBuf.buffer, 16)))
-            {
-                this.GotoAddr = goto_addr - base_display_addr;
-                this.HighlightMin = this.HighlightMax = <size_t>-1;
-            }
-        }
+        // if (ImGui.InputText("##addr", this.AddrInputBuf, 32, ImGui.InputTextFlags.CharsHexadecimal | ImGui.InputTextFlags.EnterReturnsTrue))
+        // {
+        //     // size_t goto_addr;
+        //     let goto_addr: size_t;
+        //     // if (sscanf(AddrInputBuf, "%" _PRISizeT "X", &goto_addr) === 1)
+        //     if (Number.isInteger(goto_addr = parseInt(this.AddrInputBuf.buffer, 16)))
+        //     {
+        //         this.GotoAddr = goto_addr - base_display_addr;
+        //         this.HighlightMin = this.HighlightMax = <size_t>-1;
+        //     }
+        // }
+
         ImGui.PopItemWidth();
 
         if (this.GotoAddr !== <size_t>-1)
