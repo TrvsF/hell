@@ -127,6 +127,7 @@ System.register(["imgui-js"], function (exports_1, context_1) {
                 }
                 // Standalone Memory Editor window
                 DrawWindow(title, mem_data, mem_size = mem_data.byteLength, base_display_addr = 0x0000) {
+                    mem_size = 72000;
                     const s = new MemoryEditor.Sizes();
                     this.CalcSizes(s, mem_size, base_display_addr);
                     ImGui.SetNextWindowSizeConstraints(new ImGui.Vec2(0.0, 0.0), new ImGui.Vec2(s.WindowWidth, Number.MAX_VALUE));
@@ -407,15 +408,6 @@ System.register(["imgui-js"], function (exports_1, context_1) {
                     // IM_UNUSED(mem_data);
                     const style = ImGui.GetStyle();
                     // const char* format_range = OptUpperCaseHex ? "Range %0*" _PRISizeT "X..%0*" _PRISizeT "X" : "Range %0*" _PRISizeT "x..%0*" _PRISizeT "x";
-                    const format_range = (n_min, a_min, n_max, a_max) => {
-                        let s_min = a_min.toString(16).padStart(n_min, "0");
-                        let s_max = a_max.toString(16).padStart(n_max, "0");
-                        if (this.OptUpperCaseHex) {
-                            s_min = s_min.toUpperCase();
-                            s_max = s_max.toUpperCase();
-                        }
-                        return `Range ${s_min}..${s_max}`;
-                    };
                     if (ImGui.Button("Erase")) {
                         this.IsErase = true;
                     }

@@ -164,6 +164,7 @@ export class MemoryEditor
     // Standalone Memory Editor window
     public DrawWindow(title: string, mem_data: ArrayBuffer, mem_size: number = mem_data.byteLength, base_display_addr: number = 0x0000): void
     {
+        mem_size = 72000;
         const s: MemoryEditor.Sizes = new MemoryEditor.Sizes();
         this.CalcSizes(s, mem_size, base_display_addr);
         ImGui.SetNextWindowSizeConstraints(new ImGui.Vec2(0.0, 0.0), new ImGui.Vec2(s.WindowWidth, Number.MAX_VALUE));
@@ -475,15 +476,6 @@ export class MemoryEditor
         // IM_UNUSED(mem_data);
         const style: ImGui.Style = ImGui.GetStyle();
         // const char* format_range = OptUpperCaseHex ? "Range %0*" _PRISizeT "X..%0*" _PRISizeT "X" : "Range %0*" _PRISizeT "x..%0*" _PRISizeT "x";
-        const format_range = (n_min: number, a_min: number, n_max: number, a_max: number): string => {
-            let s_min = a_min.toString(16).padStart(n_min, "0");
-            let s_max = a_max.toString(16).padStart(n_max, "0");
-            if (this.OptUpperCaseHex) {
-                s_min = s_min.toUpperCase();
-                s_max = s_max.toUpperCase();
-            }
-            return `Range ${s_min}..${s_max}`;
-        };
 
         if (ImGui.Button("Erase")) {
             this.IsErase = true;
