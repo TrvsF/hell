@@ -1,6 +1,6 @@
 System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], function (exports_1, context_1) {
     "use strict";
-    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, GameState, game_state, greed_flag, random_num, questions, yes_replies, no_replies, greed_stringbuilder, image_urls, img_index, six_windows, font, is_initalised, background_colour, memory_editor, window_focus_stack, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h;
+    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, GameState, game_state, greed_flag, random_num, questions, yes_replies, no_replies, greed_stringbuilder, image_urls, img_index, just_removed_image, six_windows, font, is_initalised, background_colour, memory_editor, window_focus_stack, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h;
     var __moduleName = context_1 && context_1.id;
     async function LoadArrayBuffer(url) {
         const response = await fetch(url);
@@ -252,9 +252,16 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         ImGui.End();
     }
     function ShowLustWindow(window_name) {
+        if (just_removed_image) { // hacky hack hack
+            const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.NoResize;
+            ImGui.Begin(window_name, null, window_flags);
+            ImGui.SetWindowSize(new ImGui.Vec2(281, 281));
+            just_removed_image = false;
+            ImGui.End();
+            return;
+        }
         const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
         ImGui.Begin(window_name, null, window_flags);
-        ImGui.SetWindowSize(new ImGui.Vec2(281, 281), ImGui.Cond.Once);
         if (ImGui.IsWindowFocused()) {
             OnWindowFocus(window_name);
         }
@@ -264,23 +271,46 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         window_size.x -= 24;
         window_size.y -= 24;
         if (ImGui.ImageButton(image_gl_texture, window_size)) {
-            img_index++;
-            if (image_element) {
-                image_element.src = image_urls[img_index % image_urls.length].asset_url;
-            }
+            NextImage();
         }
         // -----------------------
         // check size
         const viewport_size = ImGui.GetMainViewport().Size;
-        const big_window_size = new ImGui.Vec2(viewport_size.x * 0.7, viewport_size.y * 0.7);
+        const big_window_size = new ImGui.Vec2(viewport_size.x * 0.6, viewport_size.y * 0.6);
         const small_window_size = new ImGui.Vec2(viewport_size.x * 0.05, viewport_size.y * 0.05);
-        if (window_size.x <= small_window_size.x && window_size.y <= small_window_size.y) {
-            console.log("small");
+        let current_image_index = img_index % image_urls.length;
+        let current_image = image_urls[current_image_index];
+        if (window_size.x <= small_window_size.x && window_size.y <= small_window_size.y) { // small
+            if (current_image.is_lustful) {
+                image_urls.splice(current_image_index, 1);
+                just_removed_image = true;
+                NextImage();
+            }
+            else {
+                game_state = GameState.Hell;
+            }
         }
-        else if (window_size.x >= big_window_size.x && window_size.y >= big_window_size.y) {
-            console.log("larg");
+        else if (window_size.x >= big_window_size.x && window_size.y >= big_window_size.y) { // big
+            if (current_image.is_lustful) {
+                game_state = GameState.Hell;
+            }
+            else {
+                image_urls.splice(current_image_index, 1);
+                just_removed_image = true;
+                NextImage();
+            }
         }
         ImGui.End();
+    }
+    function NextImage() {
+        if (image_urls.length == 0) {
+            six_windows[3].window_isactive = false;
+            return;
+        }
+        img_index++;
+        if (image_element) {
+            image_element.src = image_urls[img_index % image_urls.length].asset_url;
+        }
     }
     function ShowHeavenWindow(window_name) {
         background_colour = new ImGui.Vec4(1, 1, 1, 1);
@@ -311,9 +341,23 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         ImGui.NewFrame();
         // -----------------------
         // check for gameover states
+        let are_all_windows_gone = true;
+        six_windows.forEach(window => {
+            // can't continue in silly foreach loop??
+            if (window.window_isactive && window.window_id != "limbo") {
+                are_all_windows_gone = false;
+            }
+        });
         if (memory_editor.IsErase) {
-            game_state = GameState.Hell;
+            if (are_all_windows_gone) {
+                game_state = GameState.Heaven;
+            }
+            else {
+                game_state = GameState.Hell;
+            }
         }
+        // -----------------------
+        // main windows
         switch (game_state) {
             case GameState.Base:
             case GameState.Intro:
@@ -547,6 +591,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
                 { asset_url: "assets/p4.png", is_lustful: true },
             ];
             img_index = 0;
+            just_removed_image = true;
             six_windows = [
                 { window_isactive: false, window_id: "greed" },
                 { window_isactive: false, window_id: "anger" },
