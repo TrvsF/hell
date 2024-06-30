@@ -1,6 +1,6 @@
 System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], function (exports_1, context_1) {
     "use strict";
-    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, GameState, game_state, greed_flag, random_num, questions, yes_replies, no_replies, greed_stringbuilder, image_urls, img_index, just_removed_image, six_windows, font, is_initalised, background_colour, memory_editor, window_focus_stack, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h;
+    var ImGui, ImGui_Impl, imgui_memory_editor_js_1, GameState, game_state, greed_flag, random_num, questions, yes_replies, no_replies, greed_stringbuilder, DateManager, date_manager, current_day, image_urls, img_index, just_removed_image, six_windows, font, is_initalised, background_colour, memory_editor, window_focus_stack, image_url, image_element, image_gl_texture, video_url, video_element, video_gl_texture, video_w, video_h;
     var __moduleName = context_1 && context_1.id;
     async function LoadArrayBuffer(url) {
         const response = await fetch(url);
@@ -248,7 +248,12 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         if (ImGui.IsWindowFocused()) {
             OnWindowFocus(window_name);
         }
-        ImGui.Text(ImGui.GetTime().toString());
+        if (Math.round(ImGui.GetTime()) > current_day) {
+            current_day++;
+            date_manager.NewDay();
+        }
+        ImGui.Text(date_manager.DisplayDate());
+        ImGui.Text("thankyou for the days");
         ImGui.End();
     }
     function ShowLustWindow(window_name) {
@@ -390,6 +395,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
                 ShowHeavenWindow("heaven");
                 break;
             case GameState.Hell:
+                video_element?.pause();
                 ShowHellWindow("Hell");
                 break;
         }
@@ -584,6 +590,20 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
                 "do you always do that?",
             ];
             greed_stringbuilder = new ImGui.StringBuffer(128, "");
+            // fresh from chatgpt
+            DateManager = class DateManager {
+                constructor() {
+                    this.date = new Date();
+                }
+                DisplayDate() {
+                    return this.date.toDateString();
+                }
+                NewDay() {
+                    this.date.setDate(this.date.getDate() + 1);
+                }
+            };
+            date_manager = new DateManager();
+            current_day = 0;
             image_urls = [
                 { asset_url: "assets/p1.png", is_lustful: true },
                 { asset_url: "assets/p2.png", is_lustful: true },

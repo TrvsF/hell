@@ -320,6 +320,24 @@ function ShowAngerWindow(window_name: string): void {
     ImGui.End();
 }
 
+// fresh from chatgpt
+class DateManager {
+    private date: Date;
+
+    constructor() {
+        this.date = new Date();
+    }
+
+    DisplayDate(): string {
+        return this.date.toDateString();
+    }
+
+    NewDay(): void {
+        this.date.setDate(this.date.getDate() + 1);
+    }
+}
+const date_manager = new DateManager();
+let current_day = 0;
 function ShowWasteWindow(window_name: string): void {
     const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
     ImGui.Begin(window_name, null, window_flags);
@@ -328,7 +346,13 @@ function ShowWasteWindow(window_name: string): void {
         OnWindowFocus(window_name);
     }
 
-    ImGui.Text(ImGui.GetTime().toString());
+    if (Math.round(ImGui.GetTime()) > current_day) {
+        current_day++;
+        date_manager.NewDay();
+    }
+
+    ImGui.Text(date_manager.DisplayDate());
+    ImGui.Text("thankyou for the days");
 
     ImGui.End();
 }
@@ -523,6 +547,7 @@ function _loop(time: number): void {
             break;
 
         case GameState.Hell:
+            video_element?.pause();
             ShowHellWindow("Hell");
             break;
     }
