@@ -415,9 +415,10 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
                 });
                 break;
             case GameState.Heaven:
-                video_url = "assets/gatesofeden.mp3";
+                video_url = "assets/gatesofeden.mp4";
                 StartUpVideo();
-                video_element?.play();
+                // video_element?.play();
+                // lame!
                 ShowHeavenWindow("heaven");
                 break;
             case GameState.Hell:
@@ -464,7 +465,7 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         if (window_focus_stack[0] == "skibidi") {
             if (video_element) {
                 video_element.pause();
-                video_element.volume = 0.0337;
+                video_element.volume = 0.1337;
             }
             six_windows[4].window_isactive = false; // i tried to make it pragmatic but it didn't fucking work!!!
         }

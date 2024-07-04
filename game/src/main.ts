@@ -195,7 +195,6 @@ function ShowSkibidiWindow(window_name: string): void {
     if (video_element !== null) {
         if (video_element.readyState >= video_element.HAVE_CURRENT_DATA) {
             ImGui.ImageButton(video_gl_texture, new ImGui.Vec2(video_w, video_h));
-
             video_element.volume = 0.1337;
             video_element.play();
         }
@@ -575,9 +574,10 @@ function _loop(time: number): void {
             });
             break;
         case GameState.Heaven:
-            video_url = "assets/gatesofeden.mp3";
+            video_url = "assets/gatesofeden.mp4";
             StartUpVideo();
-            video_element?.play();
+            // video_element?.play();
+            // lame!
             ShowHeavenWindow("heaven");
             break;
         case GameState.Hell:
@@ -635,7 +635,7 @@ function OnWindowFocus(window_name: string): void {
     if (window_focus_stack[0] == "skibidi") {
         if (video_element) {
             video_element.pause();
-            video_element.volume = 0.0337;
+            video_element.volume = 0.1337;
         }
         six_windows[4].window_isactive = false; // i tried to make it pragmatic but it didn't fucking work!!!
     }
