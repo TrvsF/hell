@@ -73,6 +73,7 @@ System.register(["imgui-js"], function (exports_1, context_1) {
                     this.AddrInputBuf = new ImGui.StringBuffer(32); /*char[32]*/
                     // Settings
                     this.IsErase = false;
+                    this.IsSkip = false;
                     this.Open = true;
                     this.ReadOnly = false;
                     this.Cols = 16;
@@ -427,6 +428,9 @@ System.register(["imgui-js"], function (exports_1, context_1) {
                     //     ImGui.EndPopup();
                     // }
                     ImGui.SameLine();
+                    if (ImGui.Button("Skip")) {
+                        this.IsSkip = true;
+                    }
                     // ImGui.Text(format_range, s.AddrDigitsCount, base_display_addr, s.AddrDigitsCount, base_display_addr + mem_size - 1);
                     // ImGui.Text(format_range(s.AddrDigitsCount, base_display_addr, s.AddrDigitsCount, base_display_addr + mem_size - 1));
                     // ImGui.SameLine();

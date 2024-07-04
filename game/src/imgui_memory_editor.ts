@@ -69,6 +69,7 @@ import * as ImGui from "imgui-js";
 export class MemoryEditor
 {
     IsErase: boolean;                               // = false   // travis hacky hack hack- fuck ur code
+    IsSkip: boolean;                               // = false
     // Settings
     Open: boolean;                                   // = true   // set to false when DrawWindow() was closed. ignore if not using DrawWindow().
     ReadOnly: boolean;                               // = false  // disable any editing.
@@ -102,6 +103,7 @@ export class MemoryEditor
     {
         // Settings
         this.IsErase = false;
+        this.IsSkip = false;
         this.Open = true;
         this.ReadOnly = false;
         this.Cols = 16;
@@ -498,6 +500,9 @@ export class MemoryEditor
         // }
 
         ImGui.SameLine();
+        if (ImGui.Button("Skip")) {
+            this.IsSkip = true;
+        }
         // ImGui.Text(format_range, s.AddrDigitsCount, base_display_addr, s.AddrDigitsCount, base_display_addr + mem_size - 1);
         // ImGui.Text(format_range(s.AddrDigitsCount, base_display_addr, s.AddrDigitsCount, base_display_addr + mem_size - 1));
         // ImGui.SameLine();

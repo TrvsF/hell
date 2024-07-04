@@ -128,7 +128,7 @@ function ShowLimboWindow(window_name: string): void {
     // window title
     const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoCollapse;
     ImGui.Begin("lasciate ogne speranza, voi ch'intrate", null, window_flags);
-    ImGui.SetWindowSize(new ImGui.Vec2(440, 500), ImGui.Cond.Once);
+    ImGui.SetWindowSize(new ImGui.Vec2(440, 500));
     const window_size = ImGui.GetWindowSize();
 
     if (ImGui.IsWindowFocused()) {
@@ -241,7 +241,7 @@ function ShowGreedWindow(window_name: string): void {
     const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar | ImGui.WindowFlags.NoResize;
     ImGui.Begin(window_name, null, window_flags);
     ImGui.PushID(window_name);
-    ImGui.SetWindowSize(new ImGui.Vec2(240, 240), ImGui.Cond.Once);
+    ImGui.SetWindowSize(new ImGui.Vec2(240, 240));
     ImGui.PushTextWrapPos(ImGui.GetWindowWidth() - 2.0);
     const window_size = ImGui.GetWindowSize();
 
@@ -312,10 +312,16 @@ function ShowAngerWindow(window_name: string): void {
         OnWindowFocus(window_name);
     }
 
-    ImGui.SetWindowSize(new ImGui.Vec2(150, 150), ImGui.Cond.Once);
-    ImGui.Text(ImGui.GetMousePos().x.toPrecision(4).toString());
+    ImGui.SetWindowSize(new ImGui.Vec2(150, 150));
+
+    let mouse_pos = ImGui.GetMousePos();
+    ImGui.Text(mouse_pos.x.toPrecision(4).toString());
     ImGui.SameLine();
-    ImGui.Text(ImGui.GetMousePos().y.toPrecision(4).toString());
+    ImGui.Text(mouse_pos.y.toPrecision(4).toString());
+
+    if (mouse_pos.x == 420 && mouse_pos.y == 69) {
+        six_windows[1].window_isactive = false;
+    }
 
     ImGui.End();
 }
@@ -335,8 +341,18 @@ class DateManager {
     NewDay(): void {
         this.date.setDate(this.date.getDate() + 1);
     }
+
+    GetYear(): number {
+        return this.date.getFullYear();
+    }
 }
 const date_manager = new DateManager();
+function NextDay() {
+    for (let i = 0; i < 365; i++) {
+        date_manager.NewDay();
+    }
+}
+
 let current_day = 0;
 function ShowWasteWindow(window_name: string): void {
     const window_flags = ImGui.WindowFlags.NoScrollbar | ImGui.WindowFlags.NoTitleBar;
@@ -346,6 +362,11 @@ function ShowWasteWindow(window_name: string): void {
         OnWindowFocus(window_name);
     }
 
+    if (memory_editor.IsSkip) {
+        NextDay();
+        memory_editor.IsSkip = false;
+    }
+
     if (Math.round(ImGui.GetTime()) > current_day) {
         current_day++;
         date_manager.NewDay();
@@ -353,6 +374,10 @@ function ShowWasteWindow(window_name: string): void {
 
     ImGui.Text(date_manager.DisplayDate());
     ImGui.Text("thankyou for the days");
+
+    if (date_manager.GetYear() == 2042) {
+        six_windows[2].window_isactive = false;
+    }
 
     ImGui.End();
 }
@@ -511,6 +536,8 @@ function _loop(time: number): void {
         }
     }
 
+    let viewport_size: ImGui.ImVec2 = ImGui.GetMainViewport().Size;
+
     // -----------------------
     // main windows
     switch (game_state) {
@@ -520,35 +547,42 @@ function _loop(time: number): void {
                 if (window.window_isactive) {
                     switch (window.window_id) {
                         case "skibidi":
+                            ImGui.SetNextWindowPos(new ImGui.ImVec2(viewport_size.x * 0.05, viewport_size.y * 0.4), ImGui.Cond.Once);
                             ShowSkibidiWindow("skibidi");
                             break;
                         case "greed":
+                            ImGui.SetNextWindowPos(new ImGui.ImVec2(viewport_size.x * 0.677, viewport_size.y * 0.74), ImGui.Cond.Once);
                             ShowGreedWindow("greed");
                             break;
                         case "anger":
                             ShowAngerWindow("anger");
+                            ImGui.SetNextWindowPos(new ImGui.ImVec2(viewport_size.x * 0.2, viewport_size.y * 0.15), ImGui.Cond.Once);
                             break;
                         case "waste":
+                            ImGui.SetNextWindowPos(new ImGui.ImVec2(viewport_size.x * 0.1, viewport_size.y * 0.1), ImGui.Cond.Once);
                             ShowWasteWindow("waste");
                             break;
                         case "lust":
+                            ImGui.SetNextWindowPos(new ImGui.ImVec2(viewport_size.x * 0.72, viewport_size.y * 0.32), ImGui.Cond.Once);
                             ShowLustWindow("lust");
                             break;
                         case "limbo":
+                            ImGui.SetNextWindowPos(new ImGui.ImVec2(viewport_size.x * 0.35, viewport_size.y * 0.23));
                             ShowLimboWindow("limbo");
                             break;
                     }
                 }
             });
             break;
-
         case GameState.Heaven:
+            video_url = "assets/gatesofeden.mp3";
+            StartUpVideo();
+            video_element?.play();
             ShowHeavenWindow("heaven");
             break;
-
         case GameState.Hell:
             video_element?.pause();
-            ShowHellWindow("Hell");
+            ShowHellWindow("hell");
             break;
     }
 
@@ -598,8 +632,11 @@ function OnWindowFocus(window_name: string): void {
     }
 
     window_focus_stack.push(window_name);
-
     if (window_focus_stack[0] == "skibidi") {
+        if (video_element) {
+            video_element.pause();
+            video_element.volume = 0.0337;
+        }
         six_windows[4].window_isactive = false; // i tried to make it pragmatic but it didn't fucking work!!!
     }
 }
