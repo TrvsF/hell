@@ -120,11 +120,11 @@ System.register(["imgui-js", "./imgui_impl.js", "./imgui_memory_editor.js"], fun
         // -----------------------
         // preable
         ImGui.Text("Hello, you are DEAD! Yes that's right this is what the afterlife looks like; now take your time, have a look around, get comfortable. It's gonna be a helluva journey. Within this package lies your soul, this carries your pathoftime or 'memories', we will need you to interact with these memories in order for them to pass on. Though please there's certainly no rush. ");
+        ImGui.Separator();
         // -----------------------
         // button
-        ImGui.Separator();
-        ImGui.Text("Pressing the below button will begin the passing stage.");
         if (game_state == GameState.Intro) {
+            ImGui.Text("Pressing the below button will begin the passing stage.");
             if (ImGui.Button("Begin")) {
                 six_windows.forEach(window => {
                     window.window_isactive = true;
